@@ -32,6 +32,10 @@ import com.stockapp.ui.screens.clientes.ClientesViewModel;
 import com.stockapp.ui.screens.clientes.ClientesViewModel_HiltModules;
 import com.stockapp.ui.screens.clientes.ClientesViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
 import com.stockapp.ui.screens.clientes.ClientesViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
+import com.stockapp.ui.screens.dashboard.DashboardViewModel;
+import com.stockapp.ui.screens.dashboard.DashboardViewModel_HiltModules;
+import com.stockapp.ui.screens.dashboard.DashboardViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
+import com.stockapp.ui.screens.dashboard.DashboardViewModel_HiltModules_KeyModule_Provide_LazyMapKey;
 import com.stockapp.ui.screens.inventario.AgregarEditarProductoViewModel;
 import com.stockapp.ui.screens.inventario.AgregarEditarProductoViewModel_HiltModules;
 import com.stockapp.ui.screens.inventario.AgregarEditarProductoViewModel_HiltModules_BindsModule_Binds_LazyMapKey;
@@ -428,7 +432,7 @@ public final class DaggerStockApp_HiltComponents_SingletonC {
 
     @Override
     public Map<Class<?>, Boolean> getViewModelKeys() {
-      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(11).put(AgregarEditarClienteViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AgregarEditarClienteViewModel_HiltModules.KeyModule.provide()).put(AgregarEditarProductoViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AgregarEditarProductoViewModel_HiltModules.KeyModule.provide()).put(AgregarEditarProveedorViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AgregarEditarProveedorViewModel_HiltModules.KeyModule.provide()).put(ClientesViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, ClientesViewModel_HiltModules.KeyModule.provide()).put(DetalleProveedorViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, DetalleProveedorViewModel_HiltModules.KeyModule.provide()).put(DetalleVentaViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, DetalleVentaViewModel_HiltModules.KeyModule.provide()).put(InventarioViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, InventarioViewModel_HiltModules.KeyModule.provide()).put(NuevaCompraViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, NuevaCompraViewModel_HiltModules.KeyModule.provide()).put(NuevaVentaViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, NuevaVentaViewModel_HiltModules.KeyModule.provide()).put(ProveedoresViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, ProveedoresViewModel_HiltModules.KeyModule.provide()).put(VentasViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, VentasViewModel_HiltModules.KeyModule.provide()).build());
+      return LazyClassKeyMap.<Boolean>of(MapBuilder.<String, Boolean>newMapBuilder(12).put(AgregarEditarClienteViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AgregarEditarClienteViewModel_HiltModules.KeyModule.provide()).put(AgregarEditarProductoViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AgregarEditarProductoViewModel_HiltModules.KeyModule.provide()).put(AgregarEditarProveedorViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, AgregarEditarProveedorViewModel_HiltModules.KeyModule.provide()).put(ClientesViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, ClientesViewModel_HiltModules.KeyModule.provide()).put(DashboardViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, DashboardViewModel_HiltModules.KeyModule.provide()).put(DetalleProveedorViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, DetalleProveedorViewModel_HiltModules.KeyModule.provide()).put(DetalleVentaViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, DetalleVentaViewModel_HiltModules.KeyModule.provide()).put(InventarioViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, InventarioViewModel_HiltModules.KeyModule.provide()).put(NuevaCompraViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, NuevaCompraViewModel_HiltModules.KeyModule.provide()).put(NuevaVentaViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, NuevaVentaViewModel_HiltModules.KeyModule.provide()).put(ProveedoresViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, ProveedoresViewModel_HiltModules.KeyModule.provide()).put(VentasViewModel_HiltModules_KeyModule_Provide_LazyMapKey.lazyClassKeyName, VentasViewModel_HiltModules.KeyModule.provide()).build());
     }
 
     @Override
@@ -464,6 +468,8 @@ public final class DaggerStockApp_HiltComponents_SingletonC {
 
     private Provider<ClientesViewModel> clientesViewModelProvider;
 
+    private Provider<DashboardViewModel> dashboardViewModelProvider;
+
     private Provider<DetalleProveedorViewModel> detalleProveedorViewModelProvider;
 
     private Provider<DetalleVentaViewModel> detalleVentaViewModelProvider;
@@ -495,18 +501,19 @@ public final class DaggerStockApp_HiltComponents_SingletonC {
       this.agregarEditarProductoViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 1);
       this.agregarEditarProveedorViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 2);
       this.clientesViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 3);
-      this.detalleProveedorViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
-      this.detalleVentaViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
-      this.inventarioViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
-      this.nuevaCompraViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 7);
-      this.nuevaVentaViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 8);
-      this.proveedoresViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 9);
-      this.ventasViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 10);
+      this.dashboardViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 4);
+      this.detalleProveedorViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 5);
+      this.detalleVentaViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 6);
+      this.inventarioViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 7);
+      this.nuevaCompraViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 8);
+      this.nuevaVentaViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 9);
+      this.proveedoresViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 10);
+      this.ventasViewModelProvider = new SwitchingProvider<>(singletonCImpl, activityRetainedCImpl, viewModelCImpl, 11);
     }
 
     @Override
     public Map<Class<?>, javax.inject.Provider<ViewModel>> getHiltViewModelMap() {
-      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(11).put(AgregarEditarClienteViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) agregarEditarClienteViewModelProvider)).put(AgregarEditarProductoViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) agregarEditarProductoViewModelProvider)).put(AgregarEditarProveedorViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) agregarEditarProveedorViewModelProvider)).put(ClientesViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) clientesViewModelProvider)).put(DetalleProveedorViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) detalleProveedorViewModelProvider)).put(DetalleVentaViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) detalleVentaViewModelProvider)).put(InventarioViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) inventarioViewModelProvider)).put(NuevaCompraViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) nuevaCompraViewModelProvider)).put(NuevaVentaViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) nuevaVentaViewModelProvider)).put(ProveedoresViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) proveedoresViewModelProvider)).put(VentasViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) ventasViewModelProvider)).build());
+      return LazyClassKeyMap.<javax.inject.Provider<ViewModel>>of(MapBuilder.<String, javax.inject.Provider<ViewModel>>newMapBuilder(12).put(AgregarEditarClienteViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) agregarEditarClienteViewModelProvider)).put(AgregarEditarProductoViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) agregarEditarProductoViewModelProvider)).put(AgregarEditarProveedorViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) agregarEditarProveedorViewModelProvider)).put(ClientesViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) clientesViewModelProvider)).put(DashboardViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) dashboardViewModelProvider)).put(DetalleProveedorViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) detalleProveedorViewModelProvider)).put(DetalleVentaViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) detalleVentaViewModelProvider)).put(InventarioViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) inventarioViewModelProvider)).put(NuevaCompraViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) nuevaCompraViewModelProvider)).put(NuevaVentaViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) nuevaVentaViewModelProvider)).put(ProveedoresViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) proveedoresViewModelProvider)).put(VentasViewModel_HiltModules_BindsModule_Binds_LazyMapKey.lazyClassKeyName, ((Provider) ventasViewModelProvider)).build());
     }
 
     @Override
@@ -547,25 +554,28 @@ public final class DaggerStockApp_HiltComponents_SingletonC {
           case 3: // com.stockapp.ui.screens.clientes.ClientesViewModel 
           return (T) new ClientesViewModel(singletonCImpl.bindClienteRepositoryProvider.get());
 
-          case 4: // com.stockapp.ui.screens.proveedores.DetalleProveedorViewModel 
+          case 4: // com.stockapp.ui.screens.dashboard.DashboardViewModel 
+          return (T) new DashboardViewModel(singletonCImpl.bindVentaRepositoryProvider.get(), singletonCImpl.bindProveedorRepositoryProvider.get(), singletonCImpl.bindProductoRepositoryProvider.get());
+
+          case 5: // com.stockapp.ui.screens.proveedores.DetalleProveedorViewModel 
           return (T) new DetalleProveedorViewModel(singletonCImpl.bindProveedorRepositoryProvider.get());
 
-          case 5: // com.stockapp.ui.screens.ventas.DetalleVentaViewModel 
+          case 6: // com.stockapp.ui.screens.ventas.DetalleVentaViewModel 
           return (T) new DetalleVentaViewModel(singletonCImpl.bindVentaRepositoryProvider.get());
 
-          case 6: // com.stockapp.ui.screens.inventario.InventarioViewModel 
+          case 7: // com.stockapp.ui.screens.inventario.InventarioViewModel 
           return (T) new InventarioViewModel(singletonCImpl.bindProductoRepositoryProvider.get());
 
-          case 7: // com.stockapp.ui.screens.proveedores.NuevaCompraViewModel 
+          case 8: // com.stockapp.ui.screens.proveedores.NuevaCompraViewModel 
           return (T) new NuevaCompraViewModel(singletonCImpl.bindProveedorRepositoryProvider.get(), viewModelCImpl.savedStateHandle);
 
-          case 8: // com.stockapp.ui.screens.ventas.NuevaVentaViewModel 
+          case 9: // com.stockapp.ui.screens.ventas.NuevaVentaViewModel 
           return (T) new NuevaVentaViewModel(singletonCImpl.bindVentaRepositoryProvider.get(), singletonCImpl.bindClienteRepositoryProvider.get(), singletonCImpl.bindProductoRepositoryProvider.get());
 
-          case 9: // com.stockapp.ui.screens.proveedores.ProveedoresViewModel 
+          case 10: // com.stockapp.ui.screens.proveedores.ProveedoresViewModel 
           return (T) new ProveedoresViewModel(singletonCImpl.bindProveedorRepositoryProvider.get());
 
-          case 10: // com.stockapp.ui.screens.ventas.VentasViewModel 
+          case 11: // com.stockapp.ui.screens.ventas.VentasViewModel 
           return (T) new VentasViewModel(singletonCImpl.bindVentaRepositoryProvider.get());
 
           default: throw new AssertionError(id);

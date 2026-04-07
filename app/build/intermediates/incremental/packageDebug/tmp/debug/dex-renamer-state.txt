@@ -1,4 +1,4 @@
-#Tue Apr 07 08:17:03 ECT 2026
+#Tue Apr 07 09:43:16 ECT 2026
 base.0=C\:\\Proyectos\\StockApp\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
 base.1=C\:\\Proyectos\\StockApp\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
 base.10=C\:\\Proyectos\\StockApp\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex

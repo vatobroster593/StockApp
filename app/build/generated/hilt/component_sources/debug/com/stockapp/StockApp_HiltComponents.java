@@ -4,6 +4,7 @@ import com.stockapp.di.DatabaseModule;
 import com.stockapp.di.RepositoryModule;
 import com.stockapp.ui.screens.clientes.AgregarEditarClienteViewModel_HiltModules;
 import com.stockapp.ui.screens.clientes.ClientesViewModel_HiltModules;
+import com.stockapp.ui.screens.dashboard.DashboardViewModel_HiltModules;
 import com.stockapp.ui.screens.inventario.AgregarEditarProductoViewModel_HiltModules;
 import com.stockapp.ui.screens.inventario.InventarioViewModel_HiltModules;
 import com.stockapp.ui.screens.proveedores.AgregarEditarProveedorViewModel_HiltModules;
@@ -169,6 +170,7 @@ public final class StockApp_HiltComponents {
           AgregarEditarProductoViewModel_HiltModules.KeyModule.class,
           AgregarEditarProveedorViewModel_HiltModules.KeyModule.class,
           ClientesViewModel_HiltModules.KeyModule.class,
+          DashboardViewModel_HiltModules.KeyModule.class,
           DetalleProveedorViewModel_HiltModules.KeyModule.class,
           DetalleVentaViewModel_HiltModules.KeyModule.class,
           HiltWrapper_ActivityRetainedComponentManager_LifecycleModule.class,
@@ -219,6 +221,7 @@ public final class StockApp_HiltComponents {
           AgregarEditarProductoViewModel_HiltModules.BindsModule.class,
           AgregarEditarProveedorViewModel_HiltModules.BindsModule.class,
           ClientesViewModel_HiltModules.BindsModule.class,
+          DashboardViewModel_HiltModules.BindsModule.class,
           DetalleProveedorViewModel_HiltModules.BindsModule.class,
           DetalleVentaViewModel_HiltModules.BindsModule.class,
           HiltWrapper_HiltViewModelFactory_ViewModelModule.class,
