@@ -25,7 +25,9 @@ object DatabaseModule {
             context,
             StockDatabase::class.java,
             "stock_database"
-        ).build()
+        )
+        .addMigrations(StockDatabase.MIGRATION_1_2)
+        .build()
 
     @Provides
     fun provideProductoDao(db: StockDatabase): ProductoDao = db.productoDao()

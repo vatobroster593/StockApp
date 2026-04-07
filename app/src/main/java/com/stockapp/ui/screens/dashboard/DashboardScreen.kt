@@ -1,5 +1,9 @@
 package com.stockapp.ui.screens.dashboard
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -55,6 +59,10 @@ fun DashboardScreen(
             return@Scaffold
         }
 
+        AnimatedVisibility(
+            visible = !uiState.isLoading,
+            enter = fadeIn(tween(300)) + slideInVertically(tween(300)) { it / 10 }
+        ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(padding),
             contentPadding = PaddingValues(16.dp),
@@ -197,6 +205,7 @@ fun DashboardScreen(
 
             item { Spacer(Modifier.height(8.dp)) }
         }
+        } // AnimatedVisibility
     }
 }
 

@@ -86,7 +86,7 @@ public final class VentaDao_Impl implements VentaDao {
       @Override
       @NonNull
       protected String createQuery() {
-        return "INSERT OR ABORT INTO `venta_items` (`id`,`ventaId`,`productoId`,`varianteId`,`cantidad`,`tipoPrecio`,`precioUnitario`,`subtotal`) VALUES (nullif(?, 0),?,?,?,?,?,?,?)";
+        return "INSERT OR ABORT INTO `venta_items` (`id`,`ventaId`,`productoId`,`productoNombre`,`varianteId`,`varianteLabel`,`cantidad`,`tipoPrecio`,`precioUnitario`,`subtotal`) VALUES (nullif(?, 0),?,?,?,?,?,?,?,?,?)";
       }
 
       @Override
@@ -95,15 +95,21 @@ public final class VentaDao_Impl implements VentaDao {
         statement.bindLong(1, entity.getId());
         statement.bindLong(2, entity.getVentaId());
         statement.bindLong(3, entity.getProductoId());
+        statement.bindString(4, entity.getProductoNombre());
         if (entity.getVarianteId() == null) {
-          statement.bindNull(4);
+          statement.bindNull(5);
         } else {
-          statement.bindLong(4, entity.getVarianteId());
+          statement.bindLong(5, entity.getVarianteId());
         }
-        statement.bindLong(5, entity.getCantidad());
-        statement.bindString(6, entity.getTipoPrecio());
-        statement.bindDouble(7, entity.getPrecioUnitario());
-        statement.bindDouble(8, entity.getSubtotal());
+        if (entity.getVarianteLabel() == null) {
+          statement.bindNull(6);
+        } else {
+          statement.bindString(6, entity.getVarianteLabel());
+        }
+        statement.bindLong(7, entity.getCantidad());
+        statement.bindString(8, entity.getTipoPrecio());
+        statement.bindDouble(9, entity.getPrecioUnitario());
+        statement.bindDouble(10, entity.getSubtotal());
       }
     };
     this.__insertionAdapterOfAbonoEntity = new EntityInsertionAdapter<AbonoEntity>(__db) {
@@ -1166,7 +1172,7 @@ public final class VentaDao_Impl implements VentaDao {
       return;
     }
     final StringBuilder _stringBuilder = StringUtil.newStringBuilder();
-    _stringBuilder.append("SELECT `id`,`ventaId`,`productoId`,`varianteId`,`cantidad`,`tipoPrecio`,`precioUnitario`,`subtotal` FROM `venta_items` WHERE `ventaId` IN (");
+    _stringBuilder.append("SELECT `id`,`ventaId`,`productoId`,`productoNombre`,`varianteId`,`varianteLabel`,`cantidad`,`tipoPrecio`,`precioUnitario`,`subtotal` FROM `venta_items` WHERE `ventaId` IN (");
     final int _inputSize = _map.size();
     StringUtil.appendPlaceholders(_stringBuilder, _inputSize);
     _stringBuilder.append(")");
@@ -1188,11 +1194,13 @@ public final class VentaDao_Impl implements VentaDao {
       final int _cursorIndexOfId = 0;
       final int _cursorIndexOfVentaId = 1;
       final int _cursorIndexOfProductoId = 2;
-      final int _cursorIndexOfVarianteId = 3;
-      final int _cursorIndexOfCantidad = 4;
-      final int _cursorIndexOfTipoPrecio = 5;
-      final int _cursorIndexOfPrecioUnitario = 6;
-      final int _cursorIndexOfSubtotal = 7;
+      final int _cursorIndexOfProductoNombre = 3;
+      final int _cursorIndexOfVarianteId = 4;
+      final int _cursorIndexOfVarianteLabel = 5;
+      final int _cursorIndexOfCantidad = 6;
+      final int _cursorIndexOfTipoPrecio = 7;
+      final int _cursorIndexOfPrecioUnitario = 8;
+      final int _cursorIndexOfSubtotal = 9;
       while (_cursor.moveToNext()) {
         final long _tmpKey;
         _tmpKey = _cursor.getLong(_itemKeyIndex);
@@ -1205,11 +1213,19 @@ public final class VentaDao_Impl implements VentaDao {
           _tmpVentaId = _cursor.getLong(_cursorIndexOfVentaId);
           final long _tmpProductoId;
           _tmpProductoId = _cursor.getLong(_cursorIndexOfProductoId);
+          final String _tmpProductoNombre;
+          _tmpProductoNombre = _cursor.getString(_cursorIndexOfProductoNombre);
           final Long _tmpVarianteId;
           if (_cursor.isNull(_cursorIndexOfVarianteId)) {
             _tmpVarianteId = null;
           } else {
             _tmpVarianteId = _cursor.getLong(_cursorIndexOfVarianteId);
+          }
+          final String _tmpVarianteLabel;
+          if (_cursor.isNull(_cursorIndexOfVarianteLabel)) {
+            _tmpVarianteLabel = null;
+          } else {
+            _tmpVarianteLabel = _cursor.getString(_cursorIndexOfVarianteLabel);
           }
           final int _tmpCantidad;
           _tmpCantidad = _cursor.getInt(_cursorIndexOfCantidad);
@@ -1219,7 +1235,7 @@ public final class VentaDao_Impl implements VentaDao {
           _tmpPrecioUnitario = _cursor.getDouble(_cursorIndexOfPrecioUnitario);
           final double _tmpSubtotal;
           _tmpSubtotal = _cursor.getDouble(_cursorIndexOfSubtotal);
-          _item_1 = new VentaItemEntity(_tmpId,_tmpVentaId,_tmpProductoId,_tmpVarianteId,_tmpCantidad,_tmpTipoPrecio,_tmpPrecioUnitario,_tmpSubtotal);
+          _item_1 = new VentaItemEntity(_tmpId,_tmpVentaId,_tmpProductoId,_tmpProductoNombre,_tmpVarianteId,_tmpVarianteLabel,_tmpCantidad,_tmpTipoPrecio,_tmpPrecioUnitario,_tmpSubtotal);
           _tmpRelation.add(_item_1);
         }
       }

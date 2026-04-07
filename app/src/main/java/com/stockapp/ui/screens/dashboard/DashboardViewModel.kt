@@ -3,6 +3,7 @@ package com.stockapp.ui.screens.dashboard
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stockapp.data.local.relation.ProductoConVariantes
+import com.stockapp.data.preferences.AppPreferences
 import com.stockapp.domain.repository.ProductoRepository
 import com.stockapp.domain.repository.ProveedorRepository
 import com.stockapp.domain.repository.VentaRepository
@@ -29,7 +30,8 @@ data class DashboardUiState(
 class DashboardViewModel @Inject constructor(
     ventaRepository: VentaRepository,
     proveedorRepository: ProveedorRepository,
-    productoRepository: ProductoRepository
+    productoRepository: ProductoRepository,
+    prefs: AppPreferences
 ) : ViewModel() {
 
     private fun inicioHoy(): Long {
@@ -76,7 +78,7 @@ class DashboardViewModel @Inject constructor(
     val uiState: StateFlow<DashboardUiState> = combine(
         ventasFlow,
         proveedorRepository.getTotalCxPPendiente(),
-        productoRepository.getProductosConStockBajo(3)
+        productoRepository.getProductosConStockBajo(prefs.umbralStockBajo)
     ) { ventas, cxp, stockBajo ->
         DashboardUiState(
             ventasHoy = ventas[0],

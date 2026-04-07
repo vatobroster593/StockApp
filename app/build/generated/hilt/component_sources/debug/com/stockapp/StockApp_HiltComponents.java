@@ -2,6 +2,7 @@ package com.stockapp;
 
 import com.stockapp.di.DatabaseModule;
 import com.stockapp.di.RepositoryModule;
+import com.stockapp.ui.screens.ajustes.AjustesViewModel_HiltModules;
 import com.stockapp.ui.screens.clientes.AgregarEditarClienteViewModel_HiltModules;
 import com.stockapp.ui.screens.clientes.ClientesViewModel_HiltModules;
 import com.stockapp.ui.screens.dashboard.DashboardViewModel_HiltModules;
@@ -170,6 +171,7 @@ public final class StockApp_HiltComponents {
           AgregarEditarClienteViewModel_HiltModules.KeyModule.class,
           AgregarEditarProductoViewModel_HiltModules.KeyModule.class,
           AgregarEditarProveedorViewModel_HiltModules.KeyModule.class,
+          AjustesViewModel_HiltModules.KeyModule.class,
           ClientesViewModel_HiltModules.KeyModule.class,
           DashboardViewModel_HiltModules.KeyModule.class,
           DetalleProveedorViewModel_HiltModules.KeyModule.class,
@@ -222,6 +224,7 @@ public final class StockApp_HiltComponents {
           AgregarEditarClienteViewModel_HiltModules.BindsModule.class,
           AgregarEditarProductoViewModel_HiltModules.BindsModule.class,
           AgregarEditarProveedorViewModel_HiltModules.BindsModule.class,
+          AjustesViewModel_HiltModules.BindsModule.class,
           ClientesViewModel_HiltModules.BindsModule.class,
           DashboardViewModel_HiltModules.BindsModule.class,
           DetalleProveedorViewModel_HiltModules.BindsModule.class,

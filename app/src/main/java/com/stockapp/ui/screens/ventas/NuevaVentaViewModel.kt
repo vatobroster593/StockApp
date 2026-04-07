@@ -159,7 +159,9 @@ class NuevaVentaViewModel @Inject constructor(
                     VentaItemEntity(
                         ventaId = 0,
                         productoId = it.productoId,
+                        productoNombre = it.productoNombre,
                         varianteId = it.varianteId,
+                        varianteLabel = it.varianteLabel,
                         cantidad = it.cantidad,
                         tipoPrecio = it.tipoPrecio.name,
                         precioUnitario = it.precioUnitario,

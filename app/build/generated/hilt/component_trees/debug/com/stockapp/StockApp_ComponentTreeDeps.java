@@ -21,6 +21,8 @@ import hilt_aggregated_deps._com_stockapp_MainActivity_GeneratedInjector;
 import hilt_aggregated_deps._com_stockapp_StockApp_GeneratedInjector;
 import hilt_aggregated_deps._com_stockapp_di_DatabaseModule;
 import hilt_aggregated_deps._com_stockapp_di_RepositoryModule;
+import hilt_aggregated_deps._com_stockapp_ui_screens_ajustes_AjustesViewModel_HiltModules_BindsModule;
+import hilt_aggregated_deps._com_stockapp_ui_screens_ajustes_AjustesViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._com_stockapp_ui_screens_clientes_AgregarEditarClienteViewModel_HiltModules_BindsModule;
 import hilt_aggregated_deps._com_stockapp_ui_screens_clientes_AgregarEditarClienteViewModel_HiltModules_KeyModule;
 import hilt_aggregated_deps._com_stockapp_ui_screens_clientes_ClientesViewModel_HiltModules_BindsModule;
@@ -91,6 +93,8 @@ import hilt_aggregated_deps._dagger_hilt_android_internal_modules_HiltWrapper_Ac
         _com_stockapp_StockApp_GeneratedInjector.class,
         _com_stockapp_di_DatabaseModule.class,
         _com_stockapp_di_RepositoryModule.class,
+        _com_stockapp_ui_screens_ajustes_AjustesViewModel_HiltModules_BindsModule.class,
+        _com_stockapp_ui_screens_ajustes_AjustesViewModel_HiltModules_KeyModule.class,
         _com_stockapp_ui_screens_clientes_AgregarEditarClienteViewModel_HiltModules_BindsModule.class,
         _com_stockapp_ui_screens_clientes_AgregarEditarClienteViewModel_HiltModules_KeyModule.class,
         _com_stockapp_ui_screens_clientes_ClientesViewModel_HiltModules_BindsModule.class,

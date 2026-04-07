@@ -251,11 +251,17 @@ private fun VentaItemRow(item: VentaItemEntity) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Top) {
         Column(modifier = Modifier.weight(1f)) {
-            Text("Producto #${item.productoId}", style = MaterialTheme.typography.bodyMedium,
-                fontWeight = FontWeight.Medium)
-            Text("${item.cantidad} × ${item.precioUnitario.toDollarString()} · ${
-                TipoPrecio.entries.find { it.name == item.tipoPrecio }?.label ?: item.tipoPrecio
-            }", style = MaterialTheme.typography.bodySmall,
+            Text(
+                item.productoNombre.ifBlank { "Producto #${item.productoId}" },
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium
+            )
+            val detalle = buildString {
+                append("${item.cantidad} × ${item.precioUnitario.toDollarString()}")
+                append(" · ${TipoPrecio.entries.find { it.name == item.tipoPrecio }?.label ?: item.tipoPrecio}")
+                if (!item.varianteLabel.isNullOrBlank()) append(" · ${item.varianteLabel}")
+            }
+            Text(detalle, style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
         Text(item.subtotal.toDollarString(), style = MaterialTheme.typography.bodyLarge,

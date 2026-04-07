@@ -1,5 +1,9 @@
 package com.stockapp.ui.screens.ventas
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -69,26 +73,39 @@ fun VentasScreen(
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator()
                 }
-            } else if (uiState.ventas.isEmpty()) {
-                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Column(horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Icon(Icons.Filled.ReceiptLong, contentDescription = null,
-                            modifier = Modifier.size(64.dp),
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
-                        Text("Sin ventas registradas",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+            } else {
+                AnimatedVisibility(
+                    visible = uiState.ventas.isEmpty(),
+                    enter = fadeIn(),
+                    exit = fadeOut()
+                ) {
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Icon(Icons.Filled.ReceiptLong, contentDescription = null,
+                                modifier = Modifier.size(64.dp),
+                                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
+                            Text(
+                                if (uiState.filtroEstado != null) "Sin ventas con ese estado"
+                                else "Sin ventas registradas",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant)
+                        }
                     }
                 }
-            } else {
-                LazyColumn {
-                    items(uiState.ventas, key = { it.venta.id }) { vd ->
-                        VentaItem(
-                            vd = vd,
-                            onClick = { navController.navigate(Screen.DetalleVenta.createRoute(vd.venta.id)) }
-                        )
-                        HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                AnimatedVisibility(
+                    visible = uiState.ventas.isNotEmpty(),
+                    enter = fadeIn() + slideInVertically { it / 8 },
+                    exit = fadeOut()
+                ) {
+                    LazyColumn {
+                        items(uiState.ventas, key = { it.venta.id }) { vd ->
+                            VentaItem(
+                                vd = vd,
+                                onClick = { navController.navigate(Screen.DetalleVenta.createRoute(vd.venta.id)) }
+                            )
+                            HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                        }
                     }
                 }
             }

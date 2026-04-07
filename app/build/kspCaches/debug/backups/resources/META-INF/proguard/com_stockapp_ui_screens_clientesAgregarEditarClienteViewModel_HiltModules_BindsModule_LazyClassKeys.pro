@@ -1,1 +1,3 @@
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.ajustes.AjustesViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.ajustes.AjustesViewModel
 -keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.clientes.AgregarEditarClienteViewModel

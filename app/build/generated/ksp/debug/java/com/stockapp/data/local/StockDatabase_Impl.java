@@ -46,7 +46,7 @@ public final class StockDatabase_Impl extends StockDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(1) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS `productos` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `descripcion` TEXT, `categoria` TEXT NOT NULL, `precioNormal` REAL NOT NULL, `precioPorMayor` REAL NOT NULL, `fotoUri` TEXT, `fechaCreacion` INTEGER NOT NULL, `activo` INTEGER NOT NULL)");
@@ -55,7 +55,7 @@ public final class StockDatabase_Impl extends StockDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `clientes` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `telefono` TEXT, `notas` TEXT, `fechaCreacion` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `ventas` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `clienteId` INTEGER, `fecha` INTEGER NOT NULL, `subtotal` REAL NOT NULL, `descuento` REAL NOT NULL, `total` REAL NOT NULL, `estadoPago` TEXT NOT NULL, `notas` TEXT, FOREIGN KEY(`clienteId`) REFERENCES `clientes`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_ventas_clienteId` ON `ventas` (`clienteId`)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `venta_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ventaId` INTEGER NOT NULL, `productoId` INTEGER NOT NULL, `varianteId` INTEGER, `cantidad` INTEGER NOT NULL, `tipoPrecio` TEXT NOT NULL, `precioUnitario` REAL NOT NULL, `subtotal` REAL NOT NULL, FOREIGN KEY(`ventaId`) REFERENCES `ventas`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`productoId`) REFERENCES `productos`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `venta_items` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ventaId` INTEGER NOT NULL, `productoId` INTEGER NOT NULL, `productoNombre` TEXT NOT NULL, `varianteId` INTEGER, `varianteLabel` TEXT, `cantidad` INTEGER NOT NULL, `tipoPrecio` TEXT NOT NULL, `precioUnitario` REAL NOT NULL, `subtotal` REAL NOT NULL, FOREIGN KEY(`ventaId`) REFERENCES `ventas`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`productoId`) REFERENCES `productos`(`id`) ON UPDATE NO ACTION ON DELETE RESTRICT )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_venta_items_ventaId` ON `venta_items` (`ventaId`)");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_venta_items_productoId` ON `venta_items` (`productoId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `abonos` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `ventaId` INTEGER NOT NULL, `fecha` INTEGER NOT NULL, `monto` REAL NOT NULL, `notas` TEXT, FOREIGN KEY(`ventaId`) REFERENCES `ventas`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
@@ -66,7 +66,7 @@ public final class StockDatabase_Impl extends StockDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `pagos_proveedor` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `compraProveedorId` INTEGER NOT NULL, `fecha` INTEGER NOT NULL, `monto` REAL NOT NULL, `notas` TEXT, FOREIGN KEY(`compraProveedorId`) REFERENCES `compras_proveedor`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_pagos_proveedor_compraProveedorId` ON `pagos_proveedor` (`compraProveedorId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0a58cdb8a70d1905f0fd6efc0dd47e9b')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0376a66ff9a5ba84bf65fb26aefea5ee')");
       }
 
       @Override
@@ -196,11 +196,13 @@ public final class StockDatabase_Impl extends StockDatabase {
                   + " Expected:\n" + _infoVentas + "\n"
                   + " Found:\n" + _existingVentas);
         }
-        final HashMap<String, TableInfo.Column> _columnsVentaItems = new HashMap<String, TableInfo.Column>(8);
+        final HashMap<String, TableInfo.Column> _columnsVentaItems = new HashMap<String, TableInfo.Column>(10);
         _columnsVentaItems.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsVentaItems.put("ventaId", new TableInfo.Column("ventaId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsVentaItems.put("productoId", new TableInfo.Column("productoId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsVentaItems.put("productoNombre", new TableInfo.Column("productoNombre", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsVentaItems.put("varianteId", new TableInfo.Column("varianteId", "INTEGER", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsVentaItems.put("varianteLabel", new TableInfo.Column("varianteLabel", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsVentaItems.put("cantidad", new TableInfo.Column("cantidad", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsVentaItems.put("tipoPrecio", new TableInfo.Column("tipoPrecio", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsVentaItems.put("precioUnitario", new TableInfo.Column("precioUnitario", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -287,7 +289,7 @@ public final class StockDatabase_Impl extends StockDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "0a58cdb8a70d1905f0fd6efc0dd47e9b", "e54d4af1d7d76ff459762e3a052c1682");
+    }, "0376a66ff9a5ba84bf65fb26aefea5ee", "13b5d635969e2f9da0ea74a0d56f1b19");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
