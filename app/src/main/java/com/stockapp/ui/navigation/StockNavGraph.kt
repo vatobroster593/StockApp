@@ -16,7 +16,7 @@ import com.stockapp.ui.screens.inventario.AgregarEditarProductoScreen
 import com.stockapp.ui.screens.inventario.DetalleProductoScreen
 import com.stockapp.ui.screens.inventario.InventarioScreen
 import com.stockapp.ui.screens.mas.MasScreen
-import com.stockapp.ui.screens.proveedores.AgregarProveedorScreen
+import com.stockapp.ui.screens.proveedores.AgregarEditarProveedorScreen
 import com.stockapp.ui.screens.proveedores.DetalleProveedorScreen
 import com.stockapp.ui.screens.proveedores.NuevaCompraScreen
 import com.stockapp.ui.screens.proveedores.ProveedoresScreen
@@ -80,12 +80,20 @@ fun StockNavGraph(
         }
 
         // Proveedores
-        composable(Screen.Proveedores.route)      { ProveedoresScreen(navController) }
-        composable(Screen.AgregarProveedor.route) { AgregarProveedorScreen(navController) }
+        composable(Screen.Proveedores.route) { ProveedoresScreen(navController) }
+        composable(Screen.AgregarProveedor.route) {
+            AgregarEditarProveedorScreen(navController = navController, proveedorId = null)
+        }
         composable(
             route = Screen.DetalleProveedor.route,
             arguments = listOf(navArgument("proveedorId") { type = NavType.LongType })
         ) { DetalleProveedorScreen(navController) }
+        composable(
+            route = Screen.EditarProveedor.route,
+            arguments = listOf(navArgument("proveedorId") { type = NavType.LongType })
+        ) { backStack ->
+            AgregarEditarProveedorScreen(navController, backStack.arguments?.getLong("proveedorId"))
+        }
         composable(
             route = Screen.NuevaCompra.route,
             arguments = listOf(navArgument("proveedorId") { type = NavType.LongType })

@@ -2,9 +2,11 @@ package com.stockapp.di
 
 import com.stockapp.data.repository.ClienteRepositoryImpl
 import com.stockapp.data.repository.ProductoRepositoryImpl
+import com.stockapp.data.repository.ProveedorRepositoryImpl
 import com.stockapp.data.repository.VentaRepositoryImpl
 import com.stockapp.domain.repository.ClienteRepository
 import com.stockapp.domain.repository.ProductoRepository
+import com.stockapp.domain.repository.ProveedorRepository
 import com.stockapp.domain.repository.VentaRepository
 import dagger.Binds
 import dagger.Module
@@ -24,4 +26,7 @@ abstract class RepositoryModule {
 
     @Binds @Singleton
     abstract fun bindVentaRepository(impl: VentaRepositoryImpl): VentaRepository
+
+    @Binds @Singleton
+    abstract fun bindProveedorRepository(impl: ProveedorRepositoryImpl): ProveedorRepository
 }

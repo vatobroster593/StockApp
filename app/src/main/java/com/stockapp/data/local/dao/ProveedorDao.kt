@@ -29,6 +29,13 @@ interface ProveedorDao {
     @Query("SELECT * FROM compras_proveedor WHERE proveedorId = :proveedorId ORDER BY fecha DESC")
     fun getComprasPorProveedor(proveedorId: Long): Flow<List<CompraProveedorEntity>>
 
+    @Transaction
+    @Query("SELECT * FROM compras_proveedor WHERE proveedorId = :proveedorId ORDER BY fecha DESC")
+    fun getComprasConPagosPorProveedor(proveedorId: Long): Flow<List<com.stockapp.data.local.relation.CompraConPagos>>
+
+    @Query("SELECT * FROM compras_proveedor WHERE id = :id")
+    suspend fun getCompraById(id: Long): CompraProveedorEntity?
+
     @Insert
     suspend fun insertCompra(compra: CompraProveedorEntity): Long
 

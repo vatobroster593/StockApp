@@ -1,0 +1,8 @@
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.clientes.AgregarEditarClienteViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.clientes.AgregarEditarClienteViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.clientes.ClientesViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.clientes.ClientesViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.inventario.AgregarEditarProductoViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.inventario.AgregarEditarProductoViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.inventario.InventarioViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.inventario.InventarioViewModel
