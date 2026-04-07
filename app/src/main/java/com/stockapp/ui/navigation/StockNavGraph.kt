@@ -1,6 +1,7 @@
 package com.stockapp.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -9,7 +10,7 @@ import androidx.navigation.navArgument
 import com.stockapp.ui.screens.ajustes.AjustesScreen
 import com.stockapp.ui.screens.clientes.ClientesScreen
 import com.stockapp.ui.screens.dashboard.DashboardScreen
-import com.stockapp.ui.screens.inventario.AgregarProductoScreen
+import com.stockapp.ui.screens.inventario.AgregarEditarProductoScreen
 import com.stockapp.ui.screens.inventario.DetalleProductoScreen
 import com.stockapp.ui.screens.inventario.InventarioScreen
 import com.stockapp.ui.screens.mas.MasScreen
@@ -23,28 +24,43 @@ import com.stockapp.ui.screens.ventas.NuevaVentaScreen
 import com.stockapp.ui.screens.ventas.VentasScreen
 
 @Composable
-fun StockNavGraph(navController: NavHostController) {
+fun StockNavGraph(
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     NavHost(
         navController = navController,
-        startDestination = Screen.Dashboard.route
+        startDestination = Screen.Dashboard.route,
+        modifier = modifier
     ) {
-        // Bottom nav
+        // Bottom nav principal
         composable(Screen.Dashboard.route)  { DashboardScreen(navController) }
         composable(Screen.Inventario.route) { InventarioScreen(navController) }
         composable(Screen.NuevaVenta.route) { NuevaVentaScreen(navController) }
         composable(Screen.Clientes.route)   { ClientesScreen(navController) }
         composable(Screen.Mas.route)        { MasScreen(navController) }
 
-        // Inventario
-        composable(Screen.AgregarProducto.route) { AgregarProductoScreen(navController) }
+        // Inventario — Agregar producto (sin productoId)
+        composable(Screen.AgregarProducto.route) {
+            AgregarEditarProductoScreen(navController = navController, productoId = null)
+        }
+
+        // Inventario — Detalle de producto
         composable(
             route = Screen.DetalleProducto.route,
             arguments = listOf(navArgument("productoId") { type = NavType.LongType })
-        ) { DetalleProductoScreen(navController) }
+        ) {
+            DetalleProductoScreen(navController)
+        }
+
+        // Inventario — Editar producto
         composable(
             route = Screen.EditarProducto.route,
             arguments = listOf(navArgument("productoId") { type = NavType.LongType })
-        ) { AgregarProductoScreen(navController) }
+        ) { backStackEntry ->
+            val productoId = backStackEntry.arguments?.getLong("productoId")
+            AgregarEditarProductoScreen(navController = navController, productoId = productoId)
+        }
 
         // Ventas
         composable(Screen.Ventas.route) { VentasScreen(navController) }
@@ -54,11 +70,11 @@ fun StockNavGraph(navController: NavHostController) {
         ) { DetalleVentaScreen(navController) }
 
         // Clientes
-        composable(Screen.AgregarCliente.route) { /* AgregarClienteScreen */ }
+        composable(Screen.AgregarCliente.route) { /* Fase 3 */ }
         composable(
             route = Screen.DetalleCliente.route,
             arguments = listOf(navArgument("clienteId") { type = NavType.LongType })
-        ) { /* DetalleClienteScreen */ }
+        ) { /* Fase 3 */ }
 
         // Proveedores
         composable(Screen.Proveedores.route)      { ProveedoresScreen(navController) }

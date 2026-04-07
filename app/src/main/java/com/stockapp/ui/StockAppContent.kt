@@ -18,7 +18,6 @@ fun StockAppContent() {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    // Rutas donde se muestra la bottom bar
     val bottomNavRoutes = bottomNavItems.map { it.screen.route }
     val showBottomBar = currentDestination?.route in bottomNavRoutes
 
@@ -55,8 +54,11 @@ fun StockAppContent() {
             }
         }
     ) { innerPadding ->
+        // innerPadding contiene el alto de la BottomNavBar
+        // Se pasa al NavGraph para que el contenido no quede debajo de ella
         StockNavGraph(
-            navController = navController
+            navController = navController,
+            modifier = Modifier.padding(innerPadding)
         )
     }
 }
