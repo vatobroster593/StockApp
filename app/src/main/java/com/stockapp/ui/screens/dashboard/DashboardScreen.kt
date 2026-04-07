@@ -52,19 +52,13 @@ fun DashboardScreen(
             )
         }
     ) { padding ->
-        if (uiState.isLoading) {
-            Box(Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator()
-            }
-            return@Scaffold
-        }
-
-        AnimatedVisibility(
-            visible = !uiState.isLoading,
-            enter = fadeIn(tween(300)) + slideInVertically(tween(300)) { it / 10 }
-        ) {
+        Box(Modifier.fillMaxSize().padding(padding)) {
+            AnimatedVisibility(
+                visible = !uiState.isLoading,
+                enter = fadeIn(tween(300)) + slideInVertically(tween(300)) { it / 10 }
+            ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize().padding(padding),
+            modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
@@ -205,7 +199,12 @@ fun DashboardScreen(
 
             item { Spacer(Modifier.height(8.dp)) }
         }
-        } // AnimatedVisibility
+            } // AnimatedVisibility
+
+            if (uiState.isLoading) {
+                CircularProgressIndicator(Modifier.align(Alignment.Center))
+            }
+        } // Box
     }
 }
 
