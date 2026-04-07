@@ -8,7 +8,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.stockapp.ui.screens.ajustes.AjustesScreen
+import com.stockapp.ui.screens.clientes.AgregarEditarClienteScreen
 import com.stockapp.ui.screens.clientes.ClientesScreen
+import com.stockapp.ui.screens.clientes.DetalleClienteScreen
 import com.stockapp.ui.screens.dashboard.DashboardScreen
 import com.stockapp.ui.screens.inventario.AgregarEditarProductoScreen
 import com.stockapp.ui.screens.inventario.DetalleProductoScreen
@@ -40,26 +42,19 @@ fun StockNavGraph(
         composable(Screen.Clientes.route)   { ClientesScreen(navController) }
         composable(Screen.Mas.route)        { MasScreen(navController) }
 
-        // Inventario — Agregar producto (sin productoId)
+        // Inventario
         composable(Screen.AgregarProducto.route) {
             AgregarEditarProductoScreen(navController = navController, productoId = null)
         }
-
-        // Inventario — Detalle de producto
         composable(
             route = Screen.DetalleProducto.route,
             arguments = listOf(navArgument("productoId") { type = NavType.LongType })
-        ) {
-            DetalleProductoScreen(navController)
-        }
-
-        // Inventario — Editar producto
+        ) { DetalleProductoScreen(navController) }
         composable(
             route = Screen.EditarProducto.route,
             arguments = listOf(navArgument("productoId") { type = NavType.LongType })
-        ) { backStackEntry ->
-            val productoId = backStackEntry.arguments?.getLong("productoId")
-            AgregarEditarProductoScreen(navController = navController, productoId = productoId)
+        ) { backStack ->
+            AgregarEditarProductoScreen(navController, backStack.arguments?.getLong("productoId"))
         }
 
         // Ventas
@@ -70,11 +65,19 @@ fun StockNavGraph(
         ) { DetalleVentaScreen(navController) }
 
         // Clientes
-        composable(Screen.AgregarCliente.route) { /* Fase 3 */ }
+        composable(Screen.AgregarCliente.route) {
+            AgregarEditarClienteScreen(navController = navController, clienteId = null)
+        }
         composable(
             route = Screen.DetalleCliente.route,
             arguments = listOf(navArgument("clienteId") { type = NavType.LongType })
-        ) { /* Fase 3 */ }
+        ) { DetalleClienteScreen(navController) }
+        composable(
+            route = Screen.EditarCliente.route,
+            arguments = listOf(navArgument("clienteId") { type = NavType.LongType })
+        ) { backStack ->
+            AgregarEditarClienteScreen(navController, backStack.arguments?.getLong("clienteId"))
+        }
 
         // Proveedores
         composable(Screen.Proveedores.route)      { ProveedoresScreen(navController) }

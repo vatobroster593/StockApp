@@ -65,4 +65,7 @@ interface VentaDao {
     // Dashboard: count ventas del dia
     @Query("SELECT COUNT(*) FROM ventas WHERE fecha BETWEEN :desde AND :hasta")
     fun getCountVentasPorPeriodo(desde: Long, hasta: Long): Flow<Int>
+
+    @Query("SELECT * FROM ventas WHERE id = :id")
+    suspend fun getVentaById(id: Long): VentaEntity?
 }

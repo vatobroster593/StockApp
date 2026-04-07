@@ -37,6 +37,9 @@ sealed class Screen(val route: String) {
         fun createRoute(clienteId: Long) = "detalle_cliente/$clienteId"
     }
     object AgregarCliente   : Screen("agregar_cliente")
+    object EditarCliente    : Screen("editar_cliente/{clienteId}") {
+        fun createRoute(clienteId: Long) = "editar_cliente/$clienteId"
+    }
 
     // Proveedores
     object Proveedores      : Screen("proveedores")

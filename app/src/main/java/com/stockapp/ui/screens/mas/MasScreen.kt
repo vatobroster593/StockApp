@@ -3,10 +3,7 @@ package com.stockapp.ui.screens.mas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Assessment
-import androidx.compose.material.icons.filled.ChevronRight
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Store
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,6 +26,12 @@ fun MasScreen(navController: NavController) {
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(4.dp)
         ) {
+            MasItem(
+                icon = Icons.Filled.ReceiptLong,
+                label = "Historial de ventas",
+                onClick = { navController.navigate(Screen.Ventas.route) }
+            )
+            HorizontalDivider()
             MasItem(
                 icon = Icons.Filled.Store,
                 label = "Proveedores",
