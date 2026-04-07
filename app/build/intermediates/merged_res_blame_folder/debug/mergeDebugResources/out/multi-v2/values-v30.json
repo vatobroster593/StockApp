@@ -4,7 +4,7 @@
             "outputFile": "com.stockapp-mergeDebugResources-2:/values-v30/values-v30.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\17bb5c5a1f88b8e0eeba9f01cb1b55d6\\transformed\\jetified-material3-release\\res\\values-v30\\values-v30.xml",
+                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\77f60f9cda619bf8a1c70c347e459de5\\transformed\\jetified-material3-release\\res\\values-v30\\values-v30.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

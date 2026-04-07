@@ -4,24 +4,7 @@
             "outputFile": "com.stockapp-mergeDebugResources-2:/values-ta/values-ta.xml",
             "map": [
                 {
-                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\8cc93259e311218cb62df682a70a0eee\\transformed\\jetified-foundation-release\\res\\values-ta\\values-ta.xml",
-                    "from": {
-                        "startLines": "2,3",
-                        "startColumns": "4,4",
-                        "startOffsets": "55,148",
-                        "endColumns": "92,97",
-                        "endOffsets": "143,241"
-                    },
-                    "to": {
-                        "startLines": "85,86",
-                        "startColumns": "4,4",
-                        "startOffsets": "9132,9225",
-                        "endColumns": "92,97",
-                        "endOffsets": "9220,9318"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\069222af783489c22979e69a3aa25d62\\transformed\\core-1.15.0\\res\\values-ta\\values-ta.xml",
+                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\a451a11a9e2411c435b7a0f0f67775cb\\transformed\\core-1.15.0\\res\\values-ta\\values-ta.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9",
                         "startColumns": "4,4,4,4,4,4,4,4",
@@ -38,7 +21,24 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\17bb5c5a1f88b8e0eeba9f01cb1b55d6\\transformed\\jetified-material3-release\\res\\values-ta\\values-ta.xml",
+                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\d6df1695d2e4297bbcec45f0fa084b21\\transformed\\jetified-foundation-release\\res\\values-ta\\values-ta.xml",
+                    "from": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,148",
+                        "endColumns": "92,97",
+                        "endOffsets": "143,241"
+                    },
+                    "to": {
+                        "startLines": "85,86",
+                        "startColumns": "4,4",
+                        "startOffsets": "9132,9225",
+                        "endColumns": "92,97",
+                        "endOffsets": "9220,9318"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\77f60f9cda619bf8a1c70c347e459de5\\transformed\\jetified-material3-release\\res\\values-ta\\values-ta.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",
@@ -55,7 +55,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\1e035055a453a547506ad845770471e8\\transformed\\jetified-ui-release\\res\\values-ta\\values-ta.xml",
+                    "source": "C:\\Users\\Mile\\.gradle\\caches\\9.0.0\\transforms\\cff55aedb14918c509e052056df57f8f\\transformed\\jetified-ui-release\\res\\values-ta\\values-ta.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

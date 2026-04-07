@@ -16,4 +16,6 @@
 -keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.proveedores.NuevaCompraViewModel
 -keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.proveedores.ProveedoresViewModel
 -keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.proveedores.ProveedoresViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.reportes.ReportesViewModel
+-keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.reportes.ReportesViewModel
 -keep,allowobfuscation,allowshrinking class com.stockapp.ui.screens.ventas.DetalleVentaViewModel

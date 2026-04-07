@@ -88,8 +88,9 @@ dependencies {
     // Coil
     implementation(libs.coil.compose)
 
-    // Apache POI (export Excel)
+    // Apache POI (export Excel .xlsx)
     implementation(libs.apache.poi)
+    implementation(libs.apache.poi.ooxml)
 
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)

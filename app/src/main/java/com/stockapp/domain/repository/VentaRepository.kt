@@ -20,4 +20,5 @@ interface VentaRepository {
     ): Long
     suspend fun registrarAbono(ventaId: Long, ventaTotal: Double, monto: Double, notas: String?)
     suspend fun updateVenta(venta: VentaEntity)
+    suspend fun getVentasPorFechaSnapshot(desde: Long, hasta: Long): List<VentaConDetalle>
 }

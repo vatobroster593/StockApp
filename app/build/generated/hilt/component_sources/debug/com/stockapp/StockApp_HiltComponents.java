@@ -11,6 +11,7 @@ import com.stockapp.ui.screens.proveedores.AgregarEditarProveedorViewModel_HiltM
 import com.stockapp.ui.screens.proveedores.DetalleProveedorViewModel_HiltModules;
 import com.stockapp.ui.screens.proveedores.NuevaCompraViewModel_HiltModules;
 import com.stockapp.ui.screens.proveedores.ProveedoresViewModel_HiltModules;
+import com.stockapp.ui.screens.reportes.ReportesViewModel_HiltModules;
 import com.stockapp.ui.screens.ventas.DetalleVentaViewModel_HiltModules;
 import com.stockapp.ui.screens.ventas.NuevaVentaViewModel_HiltModules;
 import com.stockapp.ui.screens.ventas.VentasViewModel_HiltModules;
@@ -179,6 +180,7 @@ public final class StockApp_HiltComponents {
           NuevaCompraViewModel_HiltModules.KeyModule.class,
           NuevaVentaViewModel_HiltModules.KeyModule.class,
           ProveedoresViewModel_HiltModules.KeyModule.class,
+          ReportesViewModel_HiltModules.KeyModule.class,
           ActivityCBuilderModule.class,
           ViewModelCBuilderModule.class,
           VentasViewModel_HiltModules.KeyModule.class
@@ -229,6 +231,7 @@ public final class StockApp_HiltComponents {
           NuevaCompraViewModel_HiltModules.BindsModule.class,
           NuevaVentaViewModel_HiltModules.BindsModule.class,
           ProveedoresViewModel_HiltModules.BindsModule.class,
+          ReportesViewModel_HiltModules.BindsModule.class,
           VentasViewModel_HiltModules.BindsModule.class
       }
   )

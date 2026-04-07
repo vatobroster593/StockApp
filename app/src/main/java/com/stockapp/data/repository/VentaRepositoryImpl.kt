@@ -11,6 +11,7 @@ import com.stockapp.data.local.relation.VentaConDetalle
 import com.stockapp.domain.model.EstadoPago
 import com.stockapp.domain.repository.VentaRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class VentaRepositoryImpl @Inject constructor(
@@ -79,4 +80,7 @@ class VentaRepositoryImpl @Inject constructor(
 
     override suspend fun updateVenta(venta: VentaEntity) =
         ventaDao.updateVenta(venta)
+
+    override suspend fun getVentasPorFechaSnapshot(desde: Long, hasta: Long): List<VentaConDetalle> =
+        ventaDao.getVentasPorFecha(desde, hasta).first()
 }
