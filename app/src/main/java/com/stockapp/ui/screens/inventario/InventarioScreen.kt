@@ -292,11 +292,20 @@ fun ProductoCard(
                     color = MaterialTheme.colorScheme.primary,
                     fontWeight = FontWeight.Bold
                 )
-                Text(
-                    text = Categoria.entries.find { it.name == producto.categoria }?.label ?: producto.categoria,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                val variacion = listOfNotNull(producto.color, producto.talla).joinToString(" · ")
+                if (variacion.isNotBlank()) {
+                    Text(
+                        text = variacion,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    Text(
+                        text = Categoria.entries.find { it.name == producto.categoria }?.label ?: producto.categoria,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
     }

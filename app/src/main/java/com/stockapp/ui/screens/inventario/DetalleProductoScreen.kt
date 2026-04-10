@@ -154,6 +154,19 @@ fun DetalleProductoScreen(
                         )
                     }
 
+                    // Color y Talla
+                    val tieneVariacion = !producto.color.isNullOrBlank() || !producto.talla.isNullOrBlank()
+                    if (tieneVariacion) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            if (!producto.color.isNullOrBlank()) {
+                                AssistChip(onClick = {}, label = { Text("Color: ${producto.color}") })
+                            }
+                            if (!producto.talla.isNullOrBlank()) {
+                                AssistChip(onClick = {}, label = { Text("Talla: ${producto.talla}") })
+                            }
+                        }
+                    }
+
                     HorizontalDivider()
 
                     Text("Precios", style = MaterialTheme.typography.titleSmall,

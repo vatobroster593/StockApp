@@ -13,6 +13,8 @@ data class ProductoEntity(
     val precioNormal: Double,
     val precioPorMayor: Double,
     val fotoUri: String? = null,
+    val color: String? = null,
+    val talla: String? = null,
     val stock: Int = 0,
     val fechaCreacion: Long = System.currentTimeMillis(),
     val activo: Boolean = true

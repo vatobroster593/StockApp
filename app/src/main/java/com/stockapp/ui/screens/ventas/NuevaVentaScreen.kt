@@ -271,6 +271,11 @@ private fun ProductoSelectItem(producto: ProductoEntity, onClick: () -> Unit) {
         Column(modifier = Modifier.weight(1f)) {
             Text(producto.nombre, style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            val variacion = listOfNotNull(producto.color, producto.talla).joinToString(" · ")
+            if (variacion.isNotBlank()) {
+                Text(variacion, style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
             Text(producto.precioNormal.toDollarString(),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary)

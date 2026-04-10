@@ -25,6 +25,8 @@ class AgregarEditarProductoViewModel @Inject constructor(
     var categoria by mutableStateOf(Categoria.ROPA.name)
     var precioNormal by mutableStateOf("")
     var precioPorMayor by mutableStateOf("")
+    var color by mutableStateOf("")
+    var talla by mutableStateOf("")
     var stock by mutableStateOf("0")
     var fotoUri by mutableStateOf<String?>(null)
     var isLoading by mutableStateOf(false)
@@ -41,6 +43,8 @@ class AgregarEditarProductoViewModel @Inject constructor(
             categoria = p.categoria
             precioNormal = p.precioNormal.toString()
             precioPorMayor = p.precioPorMayor.toString()
+            color = p.color ?: ""
+            talla = p.talla ?: ""
             stock = p.stock.toString()
             fotoUri = p.fotoUri
         }
@@ -55,6 +59,8 @@ class AgregarEditarProductoViewModel @Inject constructor(
             categoria = p.categoria
             precioNormal = p.precioNormal.toString()
             precioPorMayor = p.precioPorMayor.toString()
+            color = p.color ?: ""
+            talla = p.talla ?: ""
             stock = "0"
             fotoUri = p.fotoUri
         }
@@ -81,6 +87,8 @@ class AgregarEditarProductoViewModel @Inject constructor(
                     categoria = categoria,
                     precioNormal = normal,
                     precioPorMayor = mayor,
+                    color = color.trim().ifBlank { null },
+                    talla = talla.trim().ifBlank { null },
                     stock = stockInt,
                     fotoUri = fotoUri
                 )

@@ -222,6 +222,29 @@ fun AgregarEditarProductoScreen(
             }
 
             item {
+                SectionTitle("Variación (opcional)")
+                Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(
+                        value = viewModel.color,
+                        onValueChange = { viewModel.color = it },
+                        label = { Text("Color") },
+                        placeholder = { Text("Ej: Rojo") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = viewModel.talla,
+                        onValueChange = { viewModel.talla = it },
+                        label = { Text("Talla") },
+                        placeholder = { Text("Ej: M, 38") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+            }
+
+            item {
                 SectionTitle("Stock")
                 Spacer(Modifier.height(8.dp))
                 OutlinedTextField(

@@ -21,7 +21,7 @@ import com.stockapp.data.local.entity.*
         CompraProveedorEntity::class,
         PagoProveedorEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = true
 )
 abstract class StockDatabase : RoomDatabase() {
@@ -35,6 +35,13 @@ abstract class StockDatabase : RoomDatabase() {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE venta_items ADD COLUMN productoNombre TEXT NOT NULL DEFAULT ''")
                 db.execSQL("ALTER TABLE venta_items ADD COLUMN varianteLabel TEXT")
+            }
+        }
+
+        val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("ALTER TABLE productos ADD COLUMN color TEXT")
+                db.execSQL("ALTER TABLE productos ADD COLUMN talla TEXT")
             }
         }
 
