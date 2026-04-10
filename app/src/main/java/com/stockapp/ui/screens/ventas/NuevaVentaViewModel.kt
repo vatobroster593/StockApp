@@ -7,9 +7,9 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.stockapp.data.local.entity.ClienteEntity
+import com.stockapp.data.local.entity.ProductoEntity
 import com.stockapp.data.local.entity.VentaEntity
 import com.stockapp.data.local.entity.VentaItemEntity
-import com.stockapp.data.local.relation.ProductoConVariantes
 import com.stockapp.domain.model.EstadoPago
 import com.stockapp.domain.model.TipoPrecio
 import com.stockapp.domain.repository.ClienteRepository
@@ -25,8 +25,6 @@ data class ItemVentaUi(
     val productoId: Long,
     val productoNombre: String,
     val fotoUri: String?,
-    val varianteId: Long?,
-    val varianteLabel: String?,
     val cantidad: Int,
     val tipoPrecio: TipoPrecio,
     val precioUnitario: Double
@@ -41,10 +39,8 @@ class NuevaVentaViewModel @Inject constructor(
     private val productoRepository: ProductoRepository
 ) : ViewModel() {
 
-    // Paso actual: 1 = Cliente, 2 = Productos, 3 = Pago
     var paso by mutableStateOf(1)
 
-    // --- Paso 1: Cliente ---
     private val _busquedaCliente = MutableStateFlow("")
     var busquedaCliente: String
         get() = _busquedaCliente.value
@@ -60,18 +56,17 @@ class NuevaVentaViewModel @Inject constructor(
         }
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    // --- Paso 2: Productos ---
     private val _busquedaProducto = MutableStateFlow("")
     var busquedaProducto: String
         get() = _busquedaProducto.value
         set(v) { _busquedaProducto.value = v }
 
-    val productos: StateFlow<List<ProductoConVariantes>> = combine(
-        productoRepository.getProductosConVariantes(),
+    val productos: StateFlow<List<ProductoEntity>> = combine(
+        productoRepository.getProductos(),
         _busquedaProducto
     ) { lista, q ->
         if (q.isBlank()) lista
-        else lista.filter { it.producto.nombre.contains(q, ignoreCase = true) }
+        else lista.filter { it.nombre.contains(q, ignoreCase = true) }
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     val items = mutableStateListOf<ItemVentaUi>()
@@ -79,7 +74,6 @@ class NuevaVentaViewModel @Inject constructor(
     val subtotal: Double get() = items.sumOf { it.subtotal }
     val total: Double get() = subtotal
 
-    // --- Paso 3: Pago ---
     var estadoPago by mutableStateOf(EstadoPago.PAGADO)
     var abonoInicial by mutableStateOf("")
     var notas by mutableStateOf("")
@@ -95,22 +89,17 @@ class NuevaVentaViewModel @Inject constructor(
     }
 
     fun agregarItem(
-        pv: ProductoConVariantes,
-        varianteId: Long?,
-        varianteLabel: String?,
+        producto: ProductoEntity,
         cantidad: Int,
         tipoPrecio: TipoPrecio,
         precioNegociado: Double?
     ) {
         val precio = when (tipoPrecio) {
-            TipoPrecio.NORMAL    -> pv.producto.precioNormal
-            TipoPrecio.MAYOR     -> pv.producto.precioPorMayor
-            TipoPrecio.NEGOCIADO -> precioNegociado ?: pv.producto.precioNormal
+            TipoPrecio.NORMAL    -> producto.precioNormal
+            TipoPrecio.MAYOR     -> producto.precioPorMayor
+            TipoPrecio.NEGOCIADO -> precioNegociado ?: producto.precioNormal
         }
-        // Si ya existe el mismo producto+variante, actualizar cantidad
-        val idx = items.indexOfFirst {
-            it.productoId == pv.producto.id && it.varianteId == varianteId
-        }
+        val idx = items.indexOfFirst { it.productoId == producto.id }
         if (idx >= 0) {
             items[idx] = items[idx].copy(
                 cantidad = items[idx].cantidad + cantidad,
@@ -120,11 +109,9 @@ class NuevaVentaViewModel @Inject constructor(
         } else {
             items.add(
                 ItemVentaUi(
-                    productoId = pv.producto.id,
-                    productoNombre = pv.producto.nombre,
-                    fotoUri = pv.producto.fotoUri,
-                    varianteId = varianteId,
-                    varianteLabel = varianteLabel,
+                    productoId = producto.id,
+                    productoNombre = producto.nombre,
+                    fotoUri = producto.fotoUri,
                     cantidad = cantidad,
                     tipoPrecio = tipoPrecio,
                     precioUnitario = precio
@@ -160,8 +147,6 @@ class NuevaVentaViewModel @Inject constructor(
                         ventaId = 0,
                         productoId = it.productoId,
                         productoNombre = it.productoNombre,
-                        varianteId = it.varianteId,
-                        varianteLabel = it.varianteLabel,
                         cantidad = it.cantidad,
                         tipoPrecio = it.tipoPrecio.name,
                         precioUnitario = it.precioUnitario,

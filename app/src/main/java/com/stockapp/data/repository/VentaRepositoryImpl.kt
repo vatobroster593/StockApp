@@ -48,11 +48,9 @@ class VentaRepositoryImpl @Inject constructor(
     ): Long = database.withTransaction {
         val ventaId = ventaDao.insertVenta(venta)
         ventaDao.insertVentaItems(items.map { it.copy(ventaId = ventaId) })
-        // Decrementar stock de cada variante vendida
+        // Decrementar stock de cada producto vendido
         items.forEach { item ->
-            item.varianteId?.let { varId ->
-                productoDao.decrementarStock(varId, item.cantidad)
-            }
+            productoDao.decrementarStock(item.productoId, item.cantidad)
         }
         // Abono inicial si pago PARCIAL
         if (abonoInicial != null && abonoInicial > 0) {

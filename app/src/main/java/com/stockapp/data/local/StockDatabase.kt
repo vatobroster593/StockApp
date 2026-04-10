@@ -13,7 +13,6 @@ import com.stockapp.data.local.entity.*
 @Database(
     entities = [
         ProductoEntity::class,
-        VarianteEntity::class,
         ClienteEntity::class,
         VentaEntity::class,
         VentaItemEntity::class,
@@ -22,7 +21,7 @@ import com.stockapp.data.local.entity.*
         CompraProveedorEntity::class,
         PagoProveedorEntity::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class StockDatabase : RoomDatabase() {
@@ -36,6 +35,22 @@ abstract class StockDatabase : RoomDatabase() {
             override fun migrate(db: SupportSQLiteDatabase) {
                 db.execSQL("ALTER TABLE venta_items ADD COLUMN productoNombre TEXT NOT NULL DEFAULT ''")
                 db.execSQL("ALTER TABLE venta_items ADD COLUMN varianteLabel TEXT")
+            }
+        }
+
+        val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Agregar stock directo al producto (suma del stock de sus variantes)
+                db.execSQL("ALTER TABLE productos ADD COLUMN stock INTEGER NOT NULL DEFAULT 0")
+                db.execSQL("""
+                    UPDATE productos SET stock = (
+                        SELECT COALESCE(SUM(v.stock), 0)
+                        FROM variantes v
+                        WHERE v.productoId = productos.id AND v.activo = 1
+                    )
+                """.trimIndent())
+                // Eliminar tabla variantes (ya no se usa)
+                db.execSQL("DROP TABLE IF EXISTS variantes")
             }
         }
     }

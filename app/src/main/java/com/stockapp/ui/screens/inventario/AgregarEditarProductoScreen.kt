@@ -9,7 +9,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
@@ -38,32 +37,31 @@ import java.io.File
 fun AgregarEditarProductoScreen(
     navController: NavController,
     productoId: Long? = null,
+    duplicarDeId: Long? = null,
     viewModel: AgregarEditarProductoViewModel = hiltViewModel()
 ) {
     val esEdicion = productoId != null
     val context = LocalContext.current
 
-    // Cargar datos si es edicion
-    LaunchedEffect(productoId) {
-        if (productoId != null) viewModel.loadProducto(productoId)
+    LaunchedEffect(productoId, duplicarDeId) {
+        when {
+            productoId != null -> viewModel.loadProducto(productoId)
+            duplicarDeId != null -> viewModel.loadParaDuplicar(duplicarDeId)
+        }
     }
 
-    // Navegar de vuelta al guardar exitosamente
     LaunchedEffect(Unit) {
         viewModel.productoGuardado.collectLatest {
             navController.popBackStack()
         }
     }
 
-    // --- Launchers de foto ---
     var cameraUri by remember { mutableStateOf<Uri?>(null) }
 
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture()
     ) { success ->
-        if (success) {
-            cameraUri?.let { viewModel.fotoUri = it.toString() }
-        }
+        if (success) cameraUri?.let { viewModel.fotoUri = it.toString() }
     }
 
     val galleryLauncher = rememberLauncherForActivityResult(
@@ -94,10 +92,16 @@ fun AgregarEditarProductoScreen(
     var showFotoDialog by remember { mutableStateOf(false) }
     var categoriaExpanded by remember { mutableStateOf(false) }
 
+    val titulo = when {
+        esEdicion -> "Editar Producto"
+        duplicarDeId != null -> "Duplicar Producto"
+        else -> "Agregar Producto"
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (esEdicion) "Editar Producto" else "Agregar Producto") },
+                title = { Text(titulo) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = "Volver")
@@ -115,42 +119,30 @@ fun AgregarEditarProductoScreen(
         }
     ) { innerPadding ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            // Seccion de foto
             item {
-                FotoSection(
-                    fotoUri = viewModel.fotoUri,
-                    onClick = { showFotoDialog = true }
-                )
+                FotoSection(fotoUri = viewModel.fotoUri, onClick = { showFotoDialog = true })
             }
 
-            // Error message
             if (viewModel.errorMessage != null) {
                 item {
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.errorContainer
-                        )
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(12.dp),
+                    Card(colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.errorContainer)) {
+                        Row(Modifier.padding(12.dp),
                             horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
+                            verticalAlignment = Alignment.CenterVertically) {
                             Icon(Icons.Filled.Error, contentDescription = null,
                                 tint = MaterialTheme.colorScheme.onErrorContainer)
-                            Text(viewModel.errorMessage!!, color = MaterialTheme.colorScheme.onErrorContainer)
+                            Text(viewModel.errorMessage!!,
+                                color = MaterialTheme.colorScheme.onErrorContainer)
                         }
                     }
                 }
             }
 
-            // Informacion basica
             item {
                 SectionTitle("Información del producto")
                 Spacer(Modifier.height(8.dp))
@@ -173,14 +165,14 @@ fun AgregarEditarProductoScreen(
                 )
             }
 
-            // Dropdown categoria
             item {
                 ExposedDropdownMenuBox(
                     expanded = categoriaExpanded,
                     onExpandedChange = { categoriaExpanded = it }
                 ) {
                     OutlinedTextField(
-                        value = Categoria.entries.find { it.name == viewModel.categoria }?.label ?: viewModel.categoria,
+                        value = Categoria.entries.find { it.name == viewModel.categoria }?.label
+                            ?: viewModel.categoria,
                         onValueChange = {},
                         readOnly = true,
                         label = { Text("Categoría *") },
@@ -204,7 +196,6 @@ fun AgregarEditarProductoScreen(
                 }
             }
 
-            // Precios
             item {
                 SectionTitle("Precios")
                 Spacer(Modifier.height(8.dp))
@@ -230,33 +221,20 @@ fun AgregarEditarProductoScreen(
                 }
             }
 
-            // Variantes
             item {
-                Row(
+                SectionTitle("Stock")
+                Spacer(Modifier.height(8.dp))
+                OutlinedTextField(
+                    value = viewModel.stock,
+                    onValueChange = { viewModel.stock = it },
+                    label = { Text("Cantidad en inventario *") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    SectionTitle("Variantes")
-                    TextButton(onClick = viewModel::addVariante) {
-                        Icon(Icons.Filled.Add, contentDescription = null)
-                        Spacer(Modifier.width(4.dp))
-                        Text("Agregar")
-                    }
-                }
-            }
-
-            itemsIndexed(viewModel.variantes) { index, variante ->
-                VarianteFormRow(
-                    variante = variante,
-                    index = index,
-                    canDelete = viewModel.variantes.size > 1,
-                    onUpdate = { viewModel.updateVariante(index, it) },
-                    onDelete = { viewModel.removeVariante(index) }
+                    singleLine = true,
+                    supportingText = { Text("Unidades disponibles actualmente") }
                 )
             }
 
-            // Boton guardar final
             item {
                 Spacer(Modifier.height(8.dp))
                 Button(
@@ -272,8 +250,10 @@ fun AgregarEditarProductoScreen(
                     } else {
                         Icon(Icons.Filled.Save, contentDescription = null)
                         Spacer(Modifier.width(8.dp))
-                        Text(if (esEdicion) "Guardar cambios" else "Guardar producto",
-                            style = MaterialTheme.typography.titleSmall)
+                        Text(
+                            if (esEdicion) "Guardar cambios" else "Guardar producto",
+                            style = MaterialTheme.typography.titleSmall
+                        )
                     }
                 }
                 Spacer(Modifier.height(32.dp))
@@ -281,7 +261,6 @@ fun AgregarEditarProductoScreen(
         }
     }
 
-    // Dialog para seleccionar origen de foto
     if (showFotoDialog) {
         AlertDialog(
             onDismissRequest = { showFotoDialog = false },
@@ -342,11 +321,7 @@ private fun FotoSection(fotoUri: String?, onClick: () -> Unit) {
             .fillMaxWidth()
             .height(200.dp)
             .clip(RoundedCornerShape(16.dp))
-            .border(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.outlineVariant,
-                shape = RoundedCornerShape(16.dp)
-            )
+            .border(2.dp, MaterialTheme.colorScheme.outlineVariant, RoundedCornerShape(16.dp))
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
@@ -358,12 +333,8 @@ private fun FotoSection(fotoUri: String?, onClick: () -> Unit) {
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize()
             )
-            // Boton de camara superpuesto
             Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .padding(12.dp)
-                    .size(40.dp)
+                modifier = Modifier.align(Alignment.BottomEnd).padding(12.dp).size(40.dp)
                     .clip(RoundedCornerShape(50))
                     .background(MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)),
                 contentAlignment = Alignment.Center
@@ -380,71 +351,9 @@ private fun FotoSection(fotoUri: String?, onClick: () -> Unit) {
                     tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
                 )
                 Spacer(Modifier.height(8.dp))
-                Text(
-                    "Toca para agregar foto",
+                Text("Toca para agregar foto",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun VarianteFormRow(
-    variante: VarianteForm,
-    index: Int,
-    canDelete: Boolean,
-    onUpdate: (VarianteForm) -> Unit,
-    onDelete: () -> Unit
-) {
-    Card(
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(12.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Atributo (ej: Talla)
-            OutlinedTextField(
-                value = variante.atributo,
-                onValueChange = { onUpdate(variante.copy(atributo = it)) },
-                label = { Text("Tipo") },
-                modifier = Modifier.weight(1.5f),
-                singleLine = true
-            )
-            // Valor (ej: 36)
-            OutlinedTextField(
-                value = variante.valor,
-                onValueChange = { onUpdate(variante.copy(valor = it)) },
-                label = { Text("Valor") },
-                modifier = Modifier.weight(1.5f),
-                singleLine = true
-            )
-            // Stock
-            OutlinedTextField(
-                value = variante.stock,
-                onValueChange = { onUpdate(variante.copy(stock = it)) },
-                label = { Text("Stock") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                modifier = Modifier.weight(1f),
-                singleLine = true
-            )
-            // Boton eliminar
-            if (canDelete) {
-                IconButton(onClick = onDelete, modifier = Modifier.size(40.dp)) {
-                    Icon(
-                        Icons.Filled.Delete,
-                        contentDescription = "Eliminar variante",
-                        tint = MaterialTheme.colorScheme.error
-                    )
-                }
-            } else {
-                Spacer(Modifier.size(40.dp))
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f))
             }
         }
     }

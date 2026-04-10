@@ -26,7 +26,7 @@ object DatabaseModule {
             StockDatabase::class.java,
             "stock_database"
         )
-        .addMigrations(StockDatabase.MIGRATION_1_2)
+        .addMigrations(StockDatabase.MIGRATION_1_2, StockDatabase.MIGRATION_2_3)
         .build()
 
     @Provides

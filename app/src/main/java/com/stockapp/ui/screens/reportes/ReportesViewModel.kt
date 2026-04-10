@@ -65,7 +65,7 @@ class ReportesViewModel @Inject constructor(
             try {
                 val uri = when (_uiState.value.tipoSeleccionado) {
                     TipoReporte.INVENTARIO -> {
-                        val productos = productoRepository.getProductosConVariantes().first()
+                        val productos = productoRepository.getProductos().first()
                         ExcelExporter.exportarInventario(context, productos)
                     }
                     TipoReporte.VENTAS -> {

@@ -2,7 +2,7 @@ package com.stockapp.ui.screens.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.stockapp.data.local.relation.ProductoConVariantes
+import com.stockapp.data.local.entity.ProductoEntity
 import com.stockapp.data.preferences.AppPreferences
 import com.stockapp.domain.repository.ProductoRepository
 import com.stockapp.domain.repository.ProveedorRepository
@@ -22,7 +22,7 @@ data class DashboardUiState(
     val countVentasMes: Int = 0,
     val totalCxC: Double = 0.0,
     val totalCxP: Double = 0.0,
-    val productosStockBajo: List<ProductoConVariantes> = emptyList(),
+    val productosStockBajo: List<ProductoEntity> = emptyList(),
     val isLoading: Boolean = true
 )
 

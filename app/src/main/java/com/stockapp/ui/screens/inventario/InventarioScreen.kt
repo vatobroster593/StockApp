@@ -31,7 +31,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.stockapp.data.local.relation.ProductoConVariantes
+import com.stockapp.data.local.entity.ProductoEntity
 import com.stockapp.domain.model.Categoria
 import com.stockapp.ui.navigation.Screen
 import com.stockapp.ui.util.compartirProducto
@@ -169,7 +169,7 @@ private fun CategoriaChips(
 
 @Composable
 private fun ProductosGrid(
-    productos: List<ProductoConVariantes>,
+    productos: List<ProductoEntity>,
     onProductoClick: (Long) -> Unit
 ) {
     val context = LocalContext.current
@@ -180,17 +180,17 @@ private fun ProductosGrid(
         horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(productos, key = { it.producto.id }) { pv ->
+        items(productos, key = { it.id }) { producto ->
             ProductoCard(
-                productoConVariantes = pv,
-                onClick = { onProductoClick(pv.producto.id) },
+                producto = producto,
+                onClick = { onProductoClick(producto.id) },
                 onShare = {
                     compartirProducto(
                         context = context,
-                        nombre = pv.producto.nombre,
-                        precioNormal = pv.producto.precioNormal,
-                        precioPorMayor = pv.producto.precioPorMayor,
-                        fotoUri = pv.producto.fotoUri
+                        nombre = producto.nombre,
+                        precioNormal = producto.precioNormal,
+                        precioPorMayor = producto.precioPorMayor,
+                        fotoUri = producto.fotoUri
                     )
                 }
             )
@@ -200,12 +200,11 @@ private fun ProductosGrid(
 
 @Composable
 fun ProductoCard(
-    productoConVariantes: ProductoConVariantes,
+    producto: ProductoEntity,
     onClick: () -> Unit,
     onShare: () -> Unit
 ) {
-    val producto = productoConVariantes.producto
-    val stockTotal = productoConVariantes.stockTotal
+    val stockTotal = producto.stock
 
     Card(
         modifier = Modifier

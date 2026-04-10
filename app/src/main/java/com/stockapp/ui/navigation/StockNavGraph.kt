@@ -56,6 +56,16 @@ fun StockNavGraph(
         ) { backStack ->
             AgregarEditarProductoScreen(navController, backStack.arguments?.getLong("productoId"))
         }
+        composable(
+            route = Screen.DuplicarProducto.route,
+            arguments = listOf(navArgument("productoId") { type = NavType.LongType })
+        ) { backStack ->
+            AgregarEditarProductoScreen(
+                navController = navController,
+                productoId = null,
+                duplicarDeId = backStack.arguments?.getLong("productoId")
+            )
+        }
 
         // Ventas
         composable(Screen.Ventas.route) { VentasScreen(navController) }

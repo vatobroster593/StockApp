@@ -24,8 +24,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.stockapp.data.local.entity.ClienteEntity
-import com.stockapp.data.local.entity.VarianteEntity
-import com.stockapp.data.local.relation.ProductoConVariantes
+import com.stockapp.data.local.entity.ProductoEntity
 import com.stockapp.domain.model.EstadoPago
 import com.stockapp.domain.model.TipoPrecio
 import com.stockapp.ui.navigation.Screen
@@ -76,9 +75,7 @@ fun NuevaVentaScreen(
 private fun StepIndicator(pasoActual: Int) {
     val pasos = listOf("Cliente", "Productos", "Pago")
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
         horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         pasos.forEachIndexed { index, label ->
@@ -86,28 +83,17 @@ private fun StepIndicator(pasoActual: Int) {
             val activo = paso == pasoActual
             val completado = paso < pasoActual
             val color = when {
-                activo    -> MaterialTheme.colorScheme.primary
+                activo     -> MaterialTheme.colorScheme.primary
                 completado -> MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
-                else      -> MaterialTheme.colorScheme.outlineVariant
+                else       -> MaterialTheme.colorScheme.outlineVariant
             }
-            Column(
-                modifier = Modifier.weight(1f),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(4.dp)
-                        .clip(RoundedCornerShape(2.dp))
-                        .background(color)
-                )
+            Column(modifier = Modifier.weight(1f), horizontalAlignment = Alignment.CenterHorizontally) {
+                Box(modifier = Modifier.fillMaxWidth().height(4.dp)
+                    .clip(RoundedCornerShape(2.dp)).background(color))
                 Spacer(Modifier.height(4.dp))
-                Text(
-                    label,
-                    style = MaterialTheme.typography.labelSmall,
+                Text(label, style = MaterialTheme.typography.labelSmall,
                     color = if (activo) MaterialTheme.colorScheme.primary
-                    else MaterialTheme.colorScheme.onSurfaceVariant
-                )
+                    else MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
     }
@@ -137,11 +123,9 @@ private fun Paso1Cliente(viewModel: NuevaVentaViewModel) {
         )
 
         LazyColumn {
-            // Opcion sin cliente
             item {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth()
                         .clickable { viewModel.seleccionarCliente(null) }
                         .padding(horizontal = 16.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -155,7 +139,6 @@ private fun Paso1Cliente(viewModel: NuevaVentaViewModel) {
                 }
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
-
             items(clientes, key = { it.id }) { cliente ->
                 ClienteSelectItem(cliente = cliente, onClick = { viewModel.seleccionarCliente(cliente) })
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
@@ -196,10 +179,9 @@ private fun ClienteSelectItem(cliente: ClienteEntity, onClick: () -> Unit) {
 @Composable
 private fun Paso2Productos(viewModel: NuevaVentaViewModel) {
     val productos by viewModel.productos.collectAsStateWithLifecycle()
-    var productoSeleccionado by remember { mutableStateOf<ProductoConVariantes?>(null) }
+    var productoSeleccionado by remember { mutableStateOf<ProductoEntity?>(null) }
 
     Column(modifier = Modifier.fillMaxSize()) {
-        // Resumen del carrito
         if (viewModel.items.isNotEmpty()) {
             Card(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp),
@@ -213,13 +195,11 @@ private fun Paso2Productos(viewModel: NuevaVentaViewModel) {
                         color = MaterialTheme.colorScheme.onPrimaryContainer)
                     Text(viewModel.subtotal.toDollarString(),
                         style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary)
+                        fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
                 }
             }
         }
 
-        // Busqueda
         OutlinedTextField(
             value = viewModel.busquedaProducto,
             onValueChange = { viewModel.busquedaProducto = it },
@@ -238,13 +218,12 @@ private fun Paso2Productos(viewModel: NuevaVentaViewModel) {
         )
 
         LazyColumn(modifier = Modifier.weight(1f), contentPadding = PaddingValues(bottom = 80.dp)) {
-            items(productos, key = { it.producto.id }) { pv ->
-                ProductoSelectItem(pv = pv, onClick = { productoSeleccionado = pv })
+            items(productos, key = { it.id }) { producto ->
+                ProductoSelectItem(producto = producto, onClick = { productoSeleccionado = producto })
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
 
-        // Boton continuar al paso 3
         Button(
             onClick = { viewModel.paso = 3 },
             enabled = viewModel.items.isNotEmpty(),
@@ -256,13 +235,12 @@ private fun Paso2Productos(viewModel: NuevaVentaViewModel) {
         }
     }
 
-    // Dialog para seleccionar variante + cantidad + precio
-    productoSeleccionado?.let { pv ->
+    productoSeleccionado?.let { producto ->
         AgregarItemDialog(
-            pv = pv,
+            producto = producto,
             onDismiss = { productoSeleccionado = null },
-            onConfirm = { varId, varLabel, qty, tipo, precioNeg ->
-                viewModel.agregarItem(pv, varId, varLabel, qty, tipo, precioNeg)
+            onConfirm = { qty, tipo, precioNeg ->
+                viewModel.agregarItem(producto, qty, tipo, precioNeg)
                 productoSeleccionado = null
             }
         )
@@ -270,18 +248,17 @@ private fun Paso2Productos(viewModel: NuevaVentaViewModel) {
 }
 
 @Composable
-private fun ProductoSelectItem(pv: ProductoConVariantes, onClick: () -> Unit) {
+private fun ProductoSelectItem(producto: ProductoEntity, onClick: () -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth().clickable(onClick = onClick)
             .padding(horizontal = 16.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        // Mini foto
         Box(modifier = Modifier.size(52.dp).clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colorScheme.surfaceVariant)) {
-            if (pv.producto.fotoUri != null) {
-                AsyncImage(model = pv.producto.fotoUri, contentDescription = null,
+            if (producto.fotoUri != null) {
+                AsyncImage(model = producto.fotoUri, contentDescription = null,
                     contentScale = ContentScale.Crop, modifier = Modifier.fillMaxSize())
             } else {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -292,15 +269,15 @@ private fun ProductoSelectItem(pv: ProductoConVariantes, onClick: () -> Unit) {
             }
         }
         Column(modifier = Modifier.weight(1f)) {
-            Text(pv.producto.nombre, style = MaterialTheme.typography.bodyLarge,
+            Text(producto.nombre, style = MaterialTheme.typography.bodyLarge,
                 fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-            Text(pv.producto.precioNormal.toDollarString(),
+            Text(producto.precioNormal.toDollarString(),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.primary)
         }
-        Text("Stock: ${pv.stockTotal}",
+        Text("Stock: ${producto.stock}",
             style = MaterialTheme.typography.labelSmall,
-            color = if (pv.stockTotal == 0) MaterialTheme.colorScheme.error
+            color = if (producto.stock == 0) MaterialTheme.colorScheme.error
             else MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
@@ -308,41 +285,19 @@ private fun ProductoSelectItem(pv: ProductoConVariantes, onClick: () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AgregarItemDialog(
-    pv: ProductoConVariantes,
+    producto: ProductoEntity,
     onDismiss: () -> Unit,
-    onConfirm: (varianteId: Long?, varianteLabel: String?, cantidad: Int,
-                tipoPrecio: TipoPrecio, precioNegociado: Double?) -> Unit
+    onConfirm: (cantidad: Int, tipoPrecio: TipoPrecio, precioNegociado: Double?) -> Unit
 ) {
-    val variantesActivas = pv.variantes.filter { it.activo }
-    var varianteSeleccionada by remember { mutableStateOf<VarianteEntity?>(variantesActivas.firstOrNull()) }
     var cantidad by remember { mutableStateOf(1) }
     var tipoPrecio by remember { mutableStateOf(TipoPrecio.NORMAL) }
     var precioNegociado by remember { mutableStateOf("") }
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(pv.producto.nombre, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+        title = { Text(producto.nombre, maxLines = 1, overflow = TextOverflow.Ellipsis) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                // Selector de variante
-                if (variantesActivas.size > 1) {
-                    Text("Variante:", style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    variantesActivas.forEach { v ->
-                        Row(
-                            modifier = Modifier.fillMaxWidth().clickable { varianteSeleccionada = v }
-                                .padding(vertical = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.spacedBy(8.dp)
-                        ) {
-                            RadioButton(selected = varianteSeleccionada?.id == v.id,
-                                onClick = { varianteSeleccionada = v })
-                            Text("${v.atributo}: ${v.valor} (Stock: ${v.stock})")
-                        }
-                    }
-                    HorizontalDivider()
-                }
-
                 // Cantidad
                 Row(verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -361,13 +316,12 @@ private fun AgregarItemDialog(
 
                 HorizontalDivider()
 
-                // Tipo de precio
                 Text("Precio:", style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant)
                 TipoPrecio.entries.forEach { tipo ->
                     val label = when (tipo) {
-                        TipoPrecio.NORMAL    -> "Normal: ${pv.producto.precioNormal.toDollarString()}"
-                        TipoPrecio.MAYOR     -> "Por mayor: ${pv.producto.precioPorMayor.toDollarString()}"
+                        TipoPrecio.NORMAL    -> "Normal: ${producto.precioNormal.toDollarString()}"
+                        TipoPrecio.MAYOR     -> "Por mayor: ${producto.precioPorMayor.toDollarString()}"
                         TipoPrecio.NEGOCIADO -> "Negociado (regateado)"
                     }
                     Row(
@@ -381,7 +335,6 @@ private fun AgregarItemDialog(
                     }
                 }
 
-                // Campo precio negociado
                 if (tipoPrecio == TipoPrecio.NEGOCIADO) {
                     OutlinedTextField(
                         value = precioNegociado,
@@ -400,11 +353,7 @@ private fun AgregarItemDialog(
                 onClick = {
                     val negPrecio = if (tipoPrecio == TipoPrecio.NEGOCIADO)
                         precioNegociado.toDoubleOrNull() else null
-                    onConfirm(
-                        varianteSeleccionada?.id,
-                        varianteSeleccionada?.let { "${it.atributo}: ${it.valor}" },
-                        cantidad, tipoPrecio, negPrecio
-                    )
+                    onConfirm(cantidad, tipoPrecio, negPrecio)
                 },
                 enabled = tipoPrecio != TipoPrecio.NEGOCIADO || precioNegociado.toDoubleOrNull() != null
             ) { Text("Agregar al carrito") }
@@ -423,37 +372,26 @@ private fun Paso3Pago(viewModel: NuevaVentaViewModel) {
         contentPadding = PaddingValues(16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Cliente
         item {
             Row(verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 Icon(Icons.Filled.Person, contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurfaceVariant)
-                Text(
-                    viewModel.clienteSeleccionado?.nombre ?: "Sin cliente registrado",
-                    style = MaterialTheme.typography.bodyLarge
-                )
+                Text(viewModel.clienteSeleccionado?.nombre ?: "Sin cliente registrado",
+                    style = MaterialTheme.typography.bodyLarge)
             }
         }
 
-        // Items del carrito
         item {
             Text("Resumen", style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
         }
 
         items(viewModel.items.toList()) { item ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(item.productoNombre, style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Medium, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                    if (item.varianteLabel != null) {
-                        Text(item.varianteLabel, style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant)
-                    }
                     Text("${item.cantidad} × ${item.precioUnitario.toDollarString()} (${item.tipoPrecio.label})",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onSurfaceVariant)
@@ -464,7 +402,6 @@ private fun Paso3Pago(viewModel: NuevaVentaViewModel) {
             HorizontalDivider()
         }
 
-        // Total
         item {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 Text("Total", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
@@ -473,7 +410,6 @@ private fun Paso3Pago(viewModel: NuevaVentaViewModel) {
             }
         }
 
-        // Estado de pago
         item {
             Text("Forma de pago", style = MaterialTheme.typography.titleSmall,
                 fontWeight = FontWeight.SemiBold, color = MaterialTheme.colorScheme.primary)
@@ -492,7 +428,6 @@ private fun Paso3Pago(viewModel: NuevaVentaViewModel) {
             }
         }
 
-        // Campo abono si es PARCIAL
         if (viewModel.estadoPago == EstadoPago.PARCIAL) {
             item {
                 OutlinedTextField(
@@ -508,7 +443,6 @@ private fun Paso3Pago(viewModel: NuevaVentaViewModel) {
             }
         }
 
-        // Notas
         item {
             OutlinedTextField(
                 value = viewModel.notas,
@@ -519,7 +453,6 @@ private fun Paso3Pago(viewModel: NuevaVentaViewModel) {
             )
         }
 
-        // Error
         if (viewModel.errorPago != null) {
             item {
                 Card(colors = CardDefaults.cardColors(
@@ -534,7 +467,6 @@ private fun Paso3Pago(viewModel: NuevaVentaViewModel) {
             }
         }
 
-        // Boton confirmar
         item {
             Button(
                 onClick = viewModel::guardarVenta,

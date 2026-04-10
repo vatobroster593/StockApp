@@ -4,8 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.core.content.FileProvider
+import com.stockapp.data.local.entity.ProductoEntity
 import com.stockapp.data.local.relation.ClienteConDeuda
-import com.stockapp.data.local.relation.ProductoConVariantes
 import com.stockapp.data.local.relation.ProveedorConDeuda
 import com.stockapp.data.local.relation.VentaConDetalle
 import org.apache.poi.ss.usermodel.BorderStyle
@@ -20,7 +20,7 @@ object ExcelExporter {
 
     fun exportarInventario(
         context: Context,
-        productos: List<ProductoConVariantes>
+        productos: List<ProductoEntity>
     ): Uri {
         val wb = XSSFWorkbook()
         val sheet = wb.createSheet("Inventario")
@@ -28,27 +28,22 @@ object ExcelExporter {
         val headerStyle = crearEstiloHeader(wb)
         val moneyStyle = crearEstiloDinero(wb)
 
-        // Header
         val header = sheet.createRow(0)
-        listOf("Nombre", "Categoría", "Precio Normal", "Precio Mayor", "Stock Total", "Variantes").forEachIndexed { i, title ->
+        listOf("Nombre", "Categoría", "Precio Normal", "Precio Mayor", "Stock").forEachIndexed { i, title ->
             header.createCell(i).apply { setCellValue(title); cellStyle = headerStyle }
         }
 
-        // Datos
         var rowIdx = 1
         productos.forEach { item ->
             val row = sheet.createRow(rowIdx++)
-            row.createCell(0).setCellValue(item.producto.nombre)
-            row.createCell(1).setCellValue(item.producto.categoria)
-            row.createCell(2).apply { setCellValue(item.producto.precioNormal); cellStyle = moneyStyle }
-            row.createCell(3).apply { setCellValue(item.producto.precioPorMayor); cellStyle = moneyStyle }
-            row.createCell(4).setCellValue(item.stockTotal.toDouble())
-            val variantesStr = item.variantes.filter { it.activo }
-                .joinToString(", ") { "${it.atributo}: ${it.valor} (${it.stock})" }
-            row.createCell(5).setCellValue(variantesStr)
+            row.createCell(0).setCellValue(item.nombre)
+            row.createCell(1).setCellValue(item.categoria)
+            row.createCell(2).apply { setCellValue(item.precioNormal); cellStyle = moneyStyle }
+            row.createCell(3).apply { setCellValue(item.precioPorMayor); cellStyle = moneyStyle }
+            row.createCell(4).setCellValue(item.stock.toDouble())
         }
 
-        autoSizeColumns(sheet, 6)
+        autoSizeColumns(sheet, 5)
         return guardarYCompartir(context, wb, "inventario")
     }
 

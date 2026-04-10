@@ -20,7 +20,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.stockapp.data.local.relation.ProductoConVariantes
+import com.stockapp.data.local.entity.ProductoEntity
 import com.stockapp.ui.navigation.Screen
 import com.stockapp.ui.util.toDollarString
 import java.text.SimpleDateFormat
@@ -161,11 +161,11 @@ fun DashboardScreen(
                             color = MaterialTheme.colorScheme.error)
                     }
                 }
-                items(uiState.productosStockBajo, key = { it.producto.id }) { item ->
+                items(uiState.productosStockBajo, key = { it.id }) { item ->
                     StockBajoRow(
                         item = item,
                         onClick = {
-                            navController.navigate(Screen.DetalleProducto.createRoute(item.producto.id))
+                            navController.navigate(Screen.DetalleProducto.createRoute(item.id))
                         }
                     )
                 }
@@ -290,7 +290,7 @@ private fun DebtCard(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun StockBajoRow(item: ProductoConVariantes, onClick: () -> Unit) {
+private fun StockBajoRow(item: ProductoEntity, onClick: () -> Unit) {
     Card(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
@@ -303,11 +303,11 @@ private fun StockBajoRow(item: ProductoConVariantes, onClick: () -> Unit) {
                 modifier = Modifier.size(20.dp)
             )
             Text(
-                item.producto.nombre,
+                item.nombre,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.weight(1f)
             )
-            val stock = item.stockTotal
+            val stock = item.stock
             Surface(
                 color = if (stock == 0) MaterialTheme.colorScheme.error
                 else MaterialTheme.colorScheme.errorContainer,

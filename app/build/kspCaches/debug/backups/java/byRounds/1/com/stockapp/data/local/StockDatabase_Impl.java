@@ -46,12 +46,10 @@ public final class StockDatabase_Impl extends StockDatabase {
   @Override
   @NonNull
   protected SupportSQLiteOpenHelper createOpenHelper(@NonNull final DatabaseConfiguration config) {
-    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(2) {
+    final SupportSQLiteOpenHelper.Callback _openCallback = new RoomOpenHelper(config, new RoomOpenHelper.Delegate(3) {
       @Override
       public void createAllTables(@NonNull final SupportSQLiteDatabase db) {
-        db.execSQL("CREATE TABLE IF NOT EXISTS `productos` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `descripcion` TEXT, `categoria` TEXT NOT NULL, `precioNormal` REAL NOT NULL, `precioPorMayor` REAL NOT NULL, `fotoUri` TEXT, `fechaCreacion` INTEGER NOT NULL, `activo` INTEGER NOT NULL)");
-        db.execSQL("CREATE TABLE IF NOT EXISTS `variantes` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `productoId` INTEGER NOT NULL, `atributo` TEXT NOT NULL, `valor` TEXT NOT NULL, `stock` INTEGER NOT NULL, `activo` INTEGER NOT NULL, FOREIGN KEY(`productoId`) REFERENCES `productos`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
-        db.execSQL("CREATE INDEX IF NOT EXISTS `index_variantes_productoId` ON `variantes` (`productoId`)");
+        db.execSQL("CREATE TABLE IF NOT EXISTS `productos` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `descripcion` TEXT, `categoria` TEXT NOT NULL, `precioNormal` REAL NOT NULL, `precioPorMayor` REAL NOT NULL, `fotoUri` TEXT, `stock` INTEGER NOT NULL, `fechaCreacion` INTEGER NOT NULL, `activo` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `clientes` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `nombre` TEXT NOT NULL, `telefono` TEXT, `notas` TEXT, `fechaCreacion` INTEGER NOT NULL)");
         db.execSQL("CREATE TABLE IF NOT EXISTS `ventas` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `clienteId` INTEGER, `fecha` INTEGER NOT NULL, `subtotal` REAL NOT NULL, `descuento` REAL NOT NULL, `total` REAL NOT NULL, `estadoPago` TEXT NOT NULL, `notas` TEXT, FOREIGN KEY(`clienteId`) REFERENCES `clientes`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_ventas_clienteId` ON `ventas` (`clienteId`)");
@@ -66,13 +64,12 @@ public final class StockDatabase_Impl extends StockDatabase {
         db.execSQL("CREATE TABLE IF NOT EXISTS `pagos_proveedor` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `compraProveedorId` INTEGER NOT NULL, `fecha` INTEGER NOT NULL, `monto` REAL NOT NULL, `notas` TEXT, FOREIGN KEY(`compraProveedorId`) REFERENCES `compras_proveedor`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )");
         db.execSQL("CREATE INDEX IF NOT EXISTS `index_pagos_proveedor_compraProveedorId` ON `pagos_proveedor` (`compraProveedorId`)");
         db.execSQL("CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)");
-        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '0376a66ff9a5ba84bf65fb26aefea5ee')");
+        db.execSQL("INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c5dc6cdbd36c2c90be3df6c8ac28783d')");
       }
 
       @Override
       public void dropAllTables(@NonNull final SupportSQLiteDatabase db) {
         db.execSQL("DROP TABLE IF EXISTS `productos`");
-        db.execSQL("DROP TABLE IF EXISTS `variantes`");
         db.execSQL("DROP TABLE IF EXISTS `clientes`");
         db.execSQL("DROP TABLE IF EXISTS `ventas`");
         db.execSQL("DROP TABLE IF EXISTS `venta_items`");
@@ -124,7 +121,7 @@ public final class StockDatabase_Impl extends StockDatabase {
       @NonNull
       public RoomOpenHelper.ValidationResult onValidateSchema(
           @NonNull final SupportSQLiteDatabase db) {
-        final HashMap<String, TableInfo.Column> _columnsProductos = new HashMap<String, TableInfo.Column>(9);
+        final HashMap<String, TableInfo.Column> _columnsProductos = new HashMap<String, TableInfo.Column>(10);
         _columnsProductos.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProductos.put("nombre", new TableInfo.Column("nombre", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProductos.put("descripcion", new TableInfo.Column("descripcion", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
@@ -132,6 +129,7 @@ public final class StockDatabase_Impl extends StockDatabase {
         _columnsProductos.put("precioNormal", new TableInfo.Column("precioNormal", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProductos.put("precioPorMayor", new TableInfo.Column("precioPorMayor", "REAL", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProductos.put("fotoUri", new TableInfo.Column("fotoUri", "TEXT", false, 0, null, TableInfo.CREATED_FROM_ENTITY));
+        _columnsProductos.put("stock", new TableInfo.Column("stock", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProductos.put("fechaCreacion", new TableInfo.Column("fechaCreacion", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         _columnsProductos.put("activo", new TableInfo.Column("activo", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
         final HashSet<TableInfo.ForeignKey> _foreignKeysProductos = new HashSet<TableInfo.ForeignKey>(0);
@@ -142,24 +140,6 @@ public final class StockDatabase_Impl extends StockDatabase {
           return new RoomOpenHelper.ValidationResult(false, "productos(com.stockapp.data.local.entity.ProductoEntity).\n"
                   + " Expected:\n" + _infoProductos + "\n"
                   + " Found:\n" + _existingProductos);
-        }
-        final HashMap<String, TableInfo.Column> _columnsVariantes = new HashMap<String, TableInfo.Column>(6);
-        _columnsVariantes.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsVariantes.put("productoId", new TableInfo.Column("productoId", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsVariantes.put("atributo", new TableInfo.Column("atributo", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsVariantes.put("valor", new TableInfo.Column("valor", "TEXT", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsVariantes.put("stock", new TableInfo.Column("stock", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        _columnsVariantes.put("activo", new TableInfo.Column("activo", "INTEGER", true, 0, null, TableInfo.CREATED_FROM_ENTITY));
-        final HashSet<TableInfo.ForeignKey> _foreignKeysVariantes = new HashSet<TableInfo.ForeignKey>(1);
-        _foreignKeysVariantes.add(new TableInfo.ForeignKey("productos", "CASCADE", "NO ACTION", Arrays.asList("productoId"), Arrays.asList("id")));
-        final HashSet<TableInfo.Index> _indicesVariantes = new HashSet<TableInfo.Index>(1);
-        _indicesVariantes.add(new TableInfo.Index("index_variantes_productoId", false, Arrays.asList("productoId"), Arrays.asList("ASC")));
-        final TableInfo _infoVariantes = new TableInfo("variantes", _columnsVariantes, _foreignKeysVariantes, _indicesVariantes);
-        final TableInfo _existingVariantes = TableInfo.read(db, "variantes");
-        if (!_infoVariantes.equals(_existingVariantes)) {
-          return new RoomOpenHelper.ValidationResult(false, "variantes(com.stockapp.data.local.entity.VarianteEntity).\n"
-                  + " Expected:\n" + _infoVariantes + "\n"
-                  + " Found:\n" + _existingVariantes);
         }
         final HashMap<String, TableInfo.Column> _columnsClientes = new HashMap<String, TableInfo.Column>(5);
         _columnsClientes.put("id", new TableInfo.Column("id", "INTEGER", true, 1, null, TableInfo.CREATED_FROM_ENTITY));
@@ -289,7 +269,7 @@ public final class StockDatabase_Impl extends StockDatabase {
         }
         return new RoomOpenHelper.ValidationResult(true, null);
       }
-    }, "0376a66ff9a5ba84bf65fb26aefea5ee", "13b5d635969e2f9da0ea74a0d56f1b19");
+    }, "c5dc6cdbd36c2c90be3df6c8ac28783d", "9eea9ea69a7b586ed34dbf4ec0fc58e2");
     final SupportSQLiteOpenHelper.Configuration _sqliteConfig = SupportSQLiteOpenHelper.Configuration.builder(config.context).name(config.name).callback(_openCallback).build();
     final SupportSQLiteOpenHelper _helper = config.sqliteOpenHelperFactory.create(_sqliteConfig);
     return _helper;
@@ -300,7 +280,7 @@ public final class StockDatabase_Impl extends StockDatabase {
   protected InvalidationTracker createInvalidationTracker() {
     final HashMap<String, String> _shadowTablesMap = new HashMap<String, String>(0);
     final HashMap<String, Set<String>> _viewTables = new HashMap<String, Set<String>>(0);
-    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "productos","variantes","clientes","ventas","venta_items","abonos","proveedores","compras_proveedor","pagos_proveedor");
+    return new InvalidationTracker(this, _shadowTablesMap, _viewTables, "productos","clientes","ventas","venta_items","abonos","proveedores","compras_proveedor","pagos_proveedor");
   }
 
   @Override
@@ -317,7 +297,6 @@ public final class StockDatabase_Impl extends StockDatabase {
         _db.execSQL("PRAGMA defer_foreign_keys = TRUE");
       }
       _db.execSQL("DELETE FROM `productos`");
-      _db.execSQL("DELETE FROM `variantes`");
       _db.execSQL("DELETE FROM `clientes`");
       _db.execSQL("DELETE FROM `ventas`");
       _db.execSQL("DELETE FROM `venta_items`");
