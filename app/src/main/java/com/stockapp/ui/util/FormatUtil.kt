@@ -9,5 +9,9 @@ fun Double.toDollarString(): String = "$%.2f".format(this)
 fun Long.toDateString(): String =
     SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(Date(this))
 
+// Para nombres de archivo (sin barras)
+fun Long.toDateTag(): String =
+    SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(Date(this))
+
 fun Long.toDateTimeString(): String =
     SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault()).format(Date(this))

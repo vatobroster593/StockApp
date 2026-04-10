@@ -95,7 +95,8 @@ object ExcelExporter {
             setCellValue(ventas.sumOf { it.saldoPendiente }); cellStyle = moneyStyle
         }
 
-        return guardarYCompartir(context, wb, "ventas_${desde.toDateString()}_${hasta.toDateString()}")
+        val tag = if (desde == 0L) "todas" else "${desde.toDateTag()}_${hasta.toDateTag()}"
+        return guardarYCompartir(context, wb, "ventas_$tag")
     }
 
     fun exportarCxC(

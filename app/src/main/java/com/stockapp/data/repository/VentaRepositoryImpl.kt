@@ -81,4 +81,7 @@ class VentaRepositoryImpl @Inject constructor(
 
     override suspend fun getVentasPorFechaSnapshot(desde: Long, hasta: Long): List<VentaConDetalle> =
         ventaDao.getVentasPorFecha(desde, hasta).first()
+
+    override suspend fun getTodasLasVentasSnapshot(): List<VentaConDetalle> =
+        ventaDao.getVentasConDetalle().first()
 }

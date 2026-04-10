@@ -26,6 +26,7 @@ enum class TipoReporte(val label: String) {
 }
 
 enum class RangoPeriodo(val label: String) {
+    TODAS("Todas"),
     HOY("Hoy"),
     SEMANA("Esta semana"),
     MES("Este mes"),
@@ -34,7 +35,7 @@ enum class RangoPeriodo(val label: String) {
 
 data class ReportesUiState(
     val tipoSeleccionado: TipoReporte = TipoReporte.INVENTARIO,
-    val rangoSeleccionado: RangoPeriodo = RangoPeriodo.MES,
+    val rangoSeleccionado: RangoPeriodo = RangoPeriodo.TODAS,
     val exportando: Boolean = false,
     val uriExportado: Uri? = null,
     val error: String? = null
@@ -69,9 +70,14 @@ class ReportesViewModel @Inject constructor(
                         ExcelExporter.exportarInventario(context, productos)
                     }
                     TipoReporte.VENTAS -> {
-                        val (desde, hasta) = rangoATimestamps(_uiState.value.rangoSeleccionado)
-                        val ventas = ventaRepository.getVentasPorFechaSnapshot(desde, hasta)
-                        ExcelExporter.exportarVentas(context, ventas, desde, hasta)
+                        if (_uiState.value.rangoSeleccionado == RangoPeriodo.TODAS) {
+                            val ventas = ventaRepository.getTodasLasVentasSnapshot()
+                            ExcelExporter.exportarVentas(context, ventas, 0L, 0L)
+                        } else {
+                            val (desde, hasta) = rangoATimestamps(_uiState.value.rangoSeleccionado)
+                            val ventas = ventaRepository.getVentasPorFechaSnapshot(desde, hasta)
+                            ExcelExporter.exportarVentas(context, ventas, desde, hasta)
+                        }
                     }
                     TipoReporte.CXC -> {
                         val clientes = clienteRepository.getClientesConDeuda().first()
@@ -96,6 +102,7 @@ class ReportesViewModel @Inject constructor(
     private fun rangoATimestamps(rango: RangoPeriodo): Pair<Long, Long> {
         val cal = Calendar.getInstance()
         return when (rango) {
+            RangoPeriodo.TODAS -> 0L to System.currentTimeMillis()
             RangoPeriodo.HOY -> {
                 cal.set(Calendar.HOUR_OF_DAY, 0); cal.set(Calendar.MINUTE, 0)
                 cal.set(Calendar.SECOND, 0); cal.set(Calendar.MILLISECOND, 0)
