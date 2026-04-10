@@ -52,6 +52,11 @@ android {
             excludes += "META-INF/NOTICE"
             excludes += "META-INF/NOTICE.txt"
             excludes += "mozilla/public-suffix-list.txt"
+            // POI/StAX: evitar duplicados de service descriptors
+            excludes += "META-INF/services/javax.xml.stream.XMLInputFactory"
+            excludes += "META-INF/services/javax.xml.stream.XMLOutputFactory"
+            excludes += "META-INF/services/javax.xml.stream.XMLEventFactory"
+            excludes += "META-INF/versions/9/module-info.class"
         }
     }
 }

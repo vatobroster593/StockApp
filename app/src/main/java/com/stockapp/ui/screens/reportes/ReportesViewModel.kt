@@ -83,8 +83,8 @@ class ReportesViewModel @Inject constructor(
                     }
                 }
                 _uiState.value = _uiState.value.copy(exportando = false, uriExportado = uri)
-            } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(exportando = false, error = e.message)
+            } catch (e: Throwable) {
+                _uiState.value = _uiState.value.copy(exportando = false, error = e.message ?: e.javaClass.simpleName)
             }
         }
     }

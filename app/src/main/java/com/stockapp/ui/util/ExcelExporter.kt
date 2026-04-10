@@ -43,7 +43,7 @@ object ExcelExporter {
             row.createCell(4).setCellValue(item.stock.toDouble())
         }
 
-        autoSizeColumns(sheet, 5)
+        setColumnWidths(sheet, listOf(30, 16, 16, 16, 10))
         return guardarYCompartir(context, wb, "inventario")
     }
 
@@ -80,7 +80,7 @@ object ExcelExporter {
             row.createCell(6).setCellValue(venta.venta.notas ?: "")
         }
 
-        autoSizeColumns(sheet, 7)
+        setColumnWidths(sheet, listOf(20, 24, 14, 14, 14, 12, 28))
 
         // Totales al final
         val totalRow = sheet.createRow(rowIdx + 1)
@@ -121,7 +121,7 @@ object ExcelExporter {
             row.createCell(2).apply { setCellValue(item.saldoPendiente); cellStyle = moneyStyle }
         }
 
-        autoSizeColumns(sheet, 3)
+        setColumnWidths(sheet, listOf(28, 18, 18))
 
         val totalRow = sheet.createRow(rowIdx + 1)
         totalRow.createCell(0).setCellValue("TOTAL")
@@ -155,7 +155,7 @@ object ExcelExporter {
             row.createCell(2).apply { setCellValue(item.deudaPendiente); cellStyle = moneyStyle }
         }
 
-        autoSizeColumns(sheet, 3)
+        setColumnWidths(sheet, listOf(28, 18, 18))
 
         val totalRow = sheet.createRow(rowIdx + 1)
         totalRow.createCell(0).setCellValue("TOTAL")
@@ -184,8 +184,11 @@ object ExcelExporter {
         dataFormat = wb.createDataFormat().getFormat("\"$\"#,##0.00")
     }
 
-    private fun autoSizeColumns(sheet: org.apache.poi.ss.usermodel.Sheet, count: Int) {
-        repeat(count) { sheet.autoSizeColumn(it) }
+    // autoSizeColumn usa AWT (no disponible en Android) — usamos anchos fijos
+    private fun setColumnWidths(sheet: org.apache.poi.ss.usermodel.Sheet, widths: List<Int>) {
+        widths.forEachIndexed { i, chars ->
+            sheet.setColumnWidth(i, chars * 256)
+        }
     }
 
     private fun guardarYCompartir(context: Context, wb: XSSFWorkbook, nombre: String): Uri {
