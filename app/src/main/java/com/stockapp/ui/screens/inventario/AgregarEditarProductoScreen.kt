@@ -197,6 +197,29 @@ fun AgregarEditarProductoScreen(
             }
 
             item {
+                SectionTitle("Variación (opcional)")
+                Spacer(Modifier.height(8.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(
+                        value = viewModel.color,
+                        onValueChange = { viewModel.color = it },
+                        label = { Text("Color") },
+                        placeholder = { Text("Ej: Rojo") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    OutlinedTextField(
+                        value = viewModel.talla,
+                        onValueChange = { viewModel.talla = it },
+                        label = { Text("Talla") },
+                        placeholder = { Text("Ej: M, 38") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                }
+            }
+
+            item {
                 SectionTitle("Precios")
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -215,29 +238,6 @@ fun AgregarEditarProductoScreen(
                         label = { Text("Por mayor *") },
                         leadingIcon = { Text("$", style = MaterialTheme.typography.bodyLarge) },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
-                        modifier = Modifier.weight(1f),
-                        singleLine = true
-                    )
-                }
-            }
-
-            item {
-                SectionTitle("Variación (opcional)")
-                Spacer(Modifier.height(8.dp))
-                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    OutlinedTextField(
-                        value = viewModel.color,
-                        onValueChange = { viewModel.color = it },
-                        label = { Text("Color") },
-                        placeholder = { Text("Ej: Rojo") },
-                        modifier = Modifier.weight(1f),
-                        singleLine = true
-                    )
-                    OutlinedTextField(
-                        value = viewModel.talla,
-                        onValueChange = { viewModel.talla = it },
-                        label = { Text("Talla") },
-                        placeholder = { Text("Ej: M, 38") },
                         modifier = Modifier.weight(1f),
                         singleLine = true
                     )

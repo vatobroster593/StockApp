@@ -1,10 +1,12 @@
 package com.stockapp.ui
 
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -21,6 +23,18 @@ fun StockAppContent() {
     val bottomNavRoutes = bottomNavItems.map { it.screen.route }
     val showBottomBar = currentDestination?.route in bottomNavRoutes
 
+    val currentTabIndex = bottomNavItems.indexOfFirst { it.screen.route == currentDestination?.route }
+
+    fun navigateToTab(index: Int) {
+        navController.navigate(bottomNavItems[index].screen.route) {
+            popUpTo(navController.graph.findStartDestination().id) { saveState = true }
+            launchSingleTop = true
+            restoreState = true
+        }
+    }
+
+    var swipeOffset by remember { mutableFloatStateOf(0f) }
+
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
@@ -29,24 +43,10 @@ fun StockAppContent() {
                         val selected = currentDestination?.hierarchy?.any {
                             it.route == item.screen.route
                         } == true
-
                         NavigationBarItem(
                             selected = selected,
-                            onClick = {
-                                navController.navigate(item.screen.route) {
-                                    popUpTo(navController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = item.icon,
-                                    contentDescription = item.label
-                                )
-                            },
+                            onClick = { navigateToTab(bottomNavItems.indexOf(item)) },
+                            icon = { Icon(item.icon, contentDescription = item.label) },
                             label = { Text(item.label) }
                         )
                     }
@@ -54,11 +54,28 @@ fun StockAppContent() {
             }
         }
     ) { innerPadding ->
-        // innerPadding contiene el alto de la BottomNavBar
-        // Se pasa al NavGraph para que el contenido no quede debajo de ella
+        val swipeModifier = if (showBottomBar && currentTabIndex >= 0) {
+            Modifier.pointerInput(currentTabIndex) {
+                detectHorizontalDragGestures(
+                    onDragStart = { swipeOffset = 0f },
+                    onDragEnd = {
+                        val threshold = 80.dp.toPx()
+                        when {
+                            swipeOffset < -threshold && currentTabIndex < bottomNavItems.size - 1 ->
+                                navigateToTab(currentTabIndex + 1)
+                            swipeOffset > threshold && currentTabIndex > 0 ->
+                                navigateToTab(currentTabIndex - 1)
+                        }
+                        swipeOffset = 0f
+                    },
+                    onHorizontalDrag = { _, dragAmount -> swipeOffset += dragAmount }
+                )
+            }
+        } else Modifier
+
         StockNavGraph(
             navController = navController,
-            modifier = Modifier.padding(innerPadding)
+            modifier = swipeModifier.padding(innerPadding)
         )
     }
 }
