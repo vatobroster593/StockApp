@@ -219,7 +219,10 @@ private fun Paso2Productos(viewModel: NuevaVentaViewModel) {
 
         LazyColumn(modifier = Modifier.weight(1f), contentPadding = PaddingValues(bottom = 80.dp)) {
             items(productos, key = { it.id }) { producto ->
-                ProductoSelectItem(producto = producto, onClick = { productoSeleccionado = producto })
+                ProductoSelectItem(
+                    producto = producto,
+                    onClick = { if (producto.stock > 0) productoSeleccionado = producto }
+                )
                 HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
             }
         }
@@ -306,15 +309,23 @@ private fun AgregarItemDialog(
                 // Cantidad
                 Row(verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text("Cantidad:", style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f))
+                    Column(modifier = Modifier.weight(1f)) {
+                        Text("Cantidad:", style = MaterialTheme.typography.bodyMedium)
+                        Text("Disponible: ${producto.stock}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant)
+                    }
                     IconButton(onClick = { if (cantidad > 1) cantidad-- },
                         modifier = Modifier.size(36.dp)) {
                         Icon(Icons.Filled.Remove, contentDescription = "Menos")
                     }
                     Text("$cantidad", style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold)
-                    IconButton(onClick = { cantidad++ }, modifier = Modifier.size(36.dp)) {
+                    IconButton(
+                        onClick = { if (cantidad < producto.stock) cantidad++ },
+                        modifier = Modifier.size(36.dp),
+                        enabled = cantidad < producto.stock
+                    ) {
                         Icon(Icons.Filled.Add, contentDescription = "Más")
                     }
                 }
@@ -360,7 +371,8 @@ private fun AgregarItemDialog(
                         precioNegociado.toDoubleOrNull() else null
                     onConfirm(cantidad, tipoPrecio, negPrecio)
                 },
-                enabled = tipoPrecio != TipoPrecio.NEGOCIADO || precioNegociado.toDoubleOrNull() != null
+                enabled = cantidad <= producto.stock &&
+                    (tipoPrecio != TipoPrecio.NEGOCIADO || precioNegociado.toDoubleOrNull() != null)
             ) { Text("Agregar al carrito") }
         },
         dismissButton = {
