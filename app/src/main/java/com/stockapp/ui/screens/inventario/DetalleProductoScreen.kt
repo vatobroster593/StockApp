@@ -74,8 +74,8 @@ fun DetalleProductoScreen(
                         compartirProducto(
                             context = context,
                             nombre = producto.nombre,
+                            descripcion = producto.descripcion,
                             precioNormal = producto.precioNormal,
-                            precioPorMayor = producto.precioPorMayor,
                             fotoUri = producto.fotoUri
                         )
                     },

@@ -7,16 +7,16 @@ import android.net.Uri
 fun compartirProducto(
     context: Context,
     nombre: String,
+    descripcion: String?,
     precioNormal: Double,
-    precioPorMayor: Double,
     fotoUri: String?
 ) {
     val texto = buildString {
         append("🛍️ *$nombre*\n")
-        append("💰 Precio: ${precioNormal.toDollarString()}\n")
-        if (precioPorMayor < precioNormal) {
-            append("📦 Por mayor: ${precioPorMayor.toDollarString()}")
+        if (!descripcion.isNullOrBlank()) {
+            append("$descripcion\n")
         }
+        append("💰 Precio: ${precioNormal.toDollarString()}")
     }
 
     val intent = if (!fotoUri.isNullOrBlank()) {
